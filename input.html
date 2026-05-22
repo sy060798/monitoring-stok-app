@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Input</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f4f6f9;
+  display: flex;
+}
+
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: #111827;
+  color: white;
+  padding: 20px;
+  position: fixed;
+}
+
+.sidebar a {
+  display: block;
+  color: #ccc;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.sidebar a.active {
+  background: #2563eb;
+  color: white;
+}
+
+.main {
+  margin-left: 240px;
+  padding: 20px;
+  width: 100%;
+}
+
+.form {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+button {
+  padding: 10px;
+  background: #111827;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+  <a href="index.html">Dashboard</a>
+  <a href="produk.html">Produk</a>
+  <a class="active" href="input.html">Input</a>
+  <a href="laporan.html">Laporan</a>
+  <a href="setting.html">Setting</a>
+</div>
+
+<div class="main">
+
+  <h1>Input Produk</h1>
+
+  <div class="form">
+    <input id="nama" placeholder="Nama">
+    <input id="modal" placeholder="Modal">
+    <input id="margin" placeholder="Margin">
+    <input id="ppn" placeholder="PPN">
+    <input id="stok" placeholder="Stok">
+
+    <button id="btnSimpan">Simpan</button>
+  </div>
+
+</div>
+
+<script src="js/core.js"></script>
+<script src="js/input.js"></script>
+
+</body>
+</html>
