@@ -17,7 +17,11 @@ async function request(payload) {
     }
 
     const formData = new URLSearchParams();
-    formData.append("data", JSON.stringify(payload));
+
+    // 🔥 TAMBAHAN: payload fleksibel (support promo_beli dll)
+    formData.append("data", JSON.stringify({
+      ...payload
+    }));
 
     const res = await fetch(API_URL, {
       method: "POST",
