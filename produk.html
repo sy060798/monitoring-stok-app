@@ -2,53 +2,72 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Produk</title>
 
 <style>
 
-/* RESET */
+/* =========================
+   RESET
+========================= */
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
 }
 
-/* BODY */
+/* =========================
+   BODY
+========================= */
 body{
     font-family:Arial, sans-serif;
-    background:#f4f6f9;
+    background:#f1f5f9;
     display:flex;
+    color:#1e293b;
 }
 
-/* SIDEBAR */
+/* =========================
+   SIDEBAR
+========================= */
 .sidebar{
     width:250px;
     height:100vh;
     background:#0f172a;
-    color:#fff;
     position:fixed;
     left:0;
     top:0;
-    padding:20px;
+    padding:25px 18px;
     overflow-y:auto;
 }
 
 .sidebar h2{
-    margin-bottom:25px;
-    font-size:24px;
+    color:#fff;
+    margin-bottom:30px;
+    font-size:26px;
+    letter-spacing:1px;
 }
 
 .sidebar a{
-    display:block;
+    display:flex;
+    align-items:center;
+    gap:10px;
+
     color:#cbd5e1;
-    padding:12px;
     text-decoration:none;
-    border-radius:8px;
-    margin-bottom:8px;
+
+    padding:14px;
+    margin-bottom:10px;
+
+    border-radius:10px;
+
+    transition:.3s;
+    font-size:15px;
 }
 
 .sidebar a:hover{
     background:#1e293b;
+    color:#fff;
 }
 
 .sidebar a.active{
@@ -56,80 +75,124 @@ body{
     color:#fff;
 }
 
-/* MAIN */
+/* =========================
+   MAIN
+========================= */
 .main{
     margin-left:250px;
     width:calc(100% - 250px);
     padding:25px;
 }
 
-/* TOPBAR */
+/* =========================
+   TOPBAR
+========================= */
 .topbar{
     background:#fff;
-    padding:20px;
-    border-radius:12px;
-    margin-bottom:15px;
-    box-shadow:0 2px 10px rgba(0,0,0,.05);
+    padding:22px;
+    border-radius:14px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:20px;
+
+    box-shadow:0 4px 15px rgba(0,0,0,.05);
 }
 
-/* SEARCH */
+.topbar h1{
+    font-size:28px;
+}
+
+/* =========================
+   SEARCH
+========================= */
 .search-box{
     margin-bottom:20px;
 }
 
 .search-box input{
     width:100%;
-    padding:12px;
-    border:1px solid #ddd;
-    border-radius:8px;
-}
+    padding:14px 18px;
 
-/* LIST (HORIZONTAL CARD) */
-#listProduk{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-}
-
-/* CARD (HORIZONTAL STYLE) */
-.card{
-    background:#fff;
-    padding:15px;
-    border-radius:12px;
-    box-shadow:0 2px 10px rgba(0,0,0,.05);
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
-}
-
-.card-left{
-    flex:1;
-}
-
-.card h3{
-    margin-bottom:5px;
-}
-
-.card p{
-    font-size:13px;
-    color:#555;
-    margin:2px 0;
-}
-
-/* BUTTON */
-button{
-    padding:6px 10px;
     border:none;
-    border-radius:6px;
+    border-radius:12px;
+
+    background:#fff;
+
+    font-size:15px;
+
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+
+.search-box input:focus{
+    outline:none;
+    border:2px solid #2563eb;
+}
+
+/* =========================
+   TABLE
+========================= */
+.table-container{
+    background:#fff;
+    border-radius:14px;
+    overflow:auto;
+    box-shadow:0 4px 15px rgba(0,0,0,.05);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1000px;
+}
+
+/* HEADER */
+table thead{
+    background:#0f172a;
+    color:#fff;
+}
+
+table th{
+    padding:18px;
+    text-align:left;
+    font-size:14px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+/* BODY */
+table td{
+    padding:16px 18px;
+    border-bottom:1px solid #e2e8f0;
+    font-size:14px;
+    white-space:nowrap;
+}
+
+table tbody tr:hover{
+    background:#f8fafc;
+}
+
+/* =========================
+   BUTTON
+========================= */
+button{
+    border:none;
+    padding:9px 14px;
+    border-radius:8px;
     cursor:pointer;
-    margin-right:5px;
+    font-size:13px;
+    transition:.2s;
 }
 
 .btn-edit{
     background:#f59e0b;
     color:#fff;
+    margin-right:5px;
+}
+
+.btn-edit:hover{
+    background:#d97706;
 }
 
 .btn-delete{
@@ -137,59 +200,135 @@ button{
     color:#fff;
 }
 
-/* ACTION */
-.action{
-    display:flex;
-    flex-direction:column;
-    gap:5px;
+.btn-delete:hover{
+    background:#dc2626;
 }
 
-/* MODAL */
+/* =========================
+   BADGE
+========================= */
+.badge{
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:bold;
+    display:inline-block;
+}
+
+.badge-stock{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.badge-empty{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+/* =========================
+   MODAL
+========================= */
 .modal{
-    display:none;
     position:fixed;
     top:0;
     left:0;
+
     width:100%;
     height:100%;
+
     background:rgba(0,0,0,.5);
+
+    display:none;
     justify-content:center;
     align-items:center;
+
+    z-index:999;
 }
 
+/* BOX */
 .modal-content{
     background:#fff;
-    padding:20px;
-    border-radius:10px;
-    width:320px;
+    width:420px;
+    border-radius:16px;
+    padding:25px;
+
+    animation:popup .2s ease;
 }
 
+@keyframes popup{
+    from{
+        transform:scale(.9);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+.modal-content h3{
+    margin-bottom:20px;
+    font-size:22px;
+}
+
+/* INPUT */
 .modal-content input{
     width:100%;
-    padding:10px;
-    margin-bottom:10px;
+    padding:13px;
+    margin-bottom:12px;
+
+    border:1px solid #ddd;
+    border-radius:10px;
+
+    font-size:14px;
 }
 
-.modal-content button{
-    width:100%;
-    padding:10px;
-    margin-top:5px;
+.modal-content input:focus{
+    outline:none;
+    border:1px solid #2563eb;
 }
 
-/* RESPONSIVE */
-@media(max-width:768px){
+/* BUTTON AREA */
+.modal-action{
+    display:flex;
+    gap:10px;
+}
+
+.modal-action button{
+    flex:1;
+    padding:12px;
+    font-size:14px;
+}
+
+/* SAVE */
+.btn-save{
+    background:#2563eb;
+    color:#fff;
+}
+
+.btn-save:hover{
+    background:#1d4ed8;
+}
+
+/* CLOSE */
+.btn-close{
+    background:#e2e8f0;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media(max-width:900px){
+
     .sidebar{
-        width:200px;
-    }
-    .main{
-        margin-left:200px;
-        width:calc(100% - 200px);
+        width:210px;
     }
 
-    .card{
-        flex-direction:column;
-        align-items:flex-start;
+    .main{
+        margin-left:210px;
+        width:calc(100% - 210px);
     }
+
 }
 
 </style>
@@ -197,35 +336,77 @@ button{
 
 <body>
 
-<!-- SIDEBAR -->
+<!-- =========================
+     SIDEBAR
+========================= -->
 <div class="sidebar">
+
     <h2>STOK APP</h2>
 
     <a href="index.html">📊 Dashboard</a>
-    <a class="active" href="produk.html">📦 Produk</a>
+
+    <a class="active" href="produk.html">
+        📦 Produk
+    </a>
+
     <a href="input.html">➕ Input</a>
+
     <a href="laporan.html">📈 Laporan</a>
+
     <a href="setting.html">⚙️ Setting</a>
+
 </div>
 
-<!-- MAIN -->
+<!-- =========================
+     MAIN
+========================= -->
 <div class="main">
 
+    <!-- TOPBAR -->
     <div class="topbar">
-        <h1>Produk</h1>
+        <h1>Data Produk</h1>
     </div>
 
     <!-- SEARCH -->
     <div class="search-box">
-        <input type="text" id="search" placeholder="🔍 Cari produk...">
+        <input
+            type="text"
+            id="search"
+            placeholder="🔍 Cari nama produk / SKU..."
+        >
     </div>
 
-    <!-- LIST -->
-    <div id="listProduk"></div>
+    <!-- TABLE -->
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Nama Produk</th>
+                    <th>SKU</th>
+                    <th>Modal</th>
+                    <th>Margin</th>
+                    <th>Harga Jual</th>
+                    <th>Stok</th>
+                    <th>Terjual</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+
+            <tbody id="listProduk">
+
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
-<!-- MODAL EDIT -->
+<!-- =========================
+     MODAL EDIT
+========================= -->
 <div class="modal" id="modalEdit">
 
     <div class="modal-content">
@@ -234,15 +415,35 @@ button{
 
         <input type="hidden" id="editSku">
 
-        <input type="text" id="editNama" placeholder="Nama">
+        <input type="text" id="editNama" placeholder="Nama Produk">
+
         <input type="number" id="editModal" placeholder="Modal">
+
         <input type="number" id="editMargin" placeholder="Margin %">
+
         <input type="number" id="editHarga" placeholder="Harga Jual">
+
         <input type="number" id="editStok" placeholder="Stok">
+
         <input type="number" id="editTerjual" placeholder="Terjual">
 
-        <button onclick="simpanEdit()">Simpan</button>
-        <button onclick="closeModal()">Tutup</button>
+        <div class="modal-action">
+
+            <button
+                class="btn-save"
+                onclick="simpanEdit()"
+            >
+                Simpan
+            </button>
+
+            <button
+                class="btn-close"
+                onclick="closeModal()"
+            >
+                Tutup
+            </button>
+
+        </div>
 
     </div>
 
