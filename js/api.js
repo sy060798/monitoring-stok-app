@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbyrh0tM0-1KbolYmND98j6z7VhMCuvwN9-tyrDcJNsXZgNsaUu6lxlT4XfG3qmge221/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbz6lHoRUW02gXqAMcSRTVEIBGnu5EDRoa_PF_SXdYcPeDpUs2FH0L8oF1--d9IaI-4/exec";
 
 let CACHE = null;
 let CACHE_TIME = 0;
