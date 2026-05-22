@@ -1,4 +1,12 @@
-document.addEventListener("DOMContentLoaded", loadProduk);
+document.addEventListener("DOMContentLoaded", () => {
+
+  loadProduk();
+
+  setupSearch();
+
+  autoHitungHarga();
+
+});
 
 /* =========================
    DATA CACHE
@@ -9,109 +17,243 @@ let ALL_DATA = [];
    LOAD PRODUK
 ========================= */
 async function loadProduk() {
+
   try {
+
     const res = await request({
       action: "getAllProduk"
     });
 
     ALL_DATA = res.data || [];
+
     renderProduk(ALL_DATA);
 
-    setupSearch();
-
   } catch (err) {
-    console.error(err);
+
+    console.error("LOAD ERROR:", err);
+
   }
+
 }
 
 /* =========================
-   RENDER PRODUK
+   RENDER TABLE
 ========================= */
 function renderProduk(data) {
+
   let html = "";
+
+  if (data.length === 0) {
+
+    html = `
+      <tr>
+        <td colspan="8" style="text-align:center;">
+          Tidak ada produk
+        </td>
+      </tr>
+    `;
+
+  }
 
   data.forEach(item => {
 
+    const stokBadge =
+      Number(item.stok) <= 0
+      ? `<span class="badge badge-empty">Habis</span>`
+      : `<span class="badge badge-stock">${item.stok}</span>`;
+
     html += `
-      <div class="card">
 
-        <div class="card-left">
-          <h3>${item.nama}</h3>
-          <p>SKU: ${item.sku}</p>
-          <p>Modal: ${formatRupiah(item.modal)}</p>
-          <p>Margin: ${item.margin || 0}%</p>
-          <p>Harga: ${formatRupiah(item.harga_jual)}</p>
-          <p>Stok: ${item.stok}</p>
-          <p>Terjual: ${item.terjual}</p>
-        </div>
+      <tr>
 
-        <div class="action">
-          <button class="btn-edit" onclick="openEdit('${item.sku}')">✏️ Edit</button>
-          <button class="btn-delete" onclick="hapusProduk('${item.sku}')">🗑 Hapus</button>
-        </div>
+        <td>
+          <strong>${item.nama}</strong>
+        </td>
 
-      </div>
+        <td>${item.sku}</td>
+
+        <td>${formatRupiah(item.modal)}</td>
+
+        <td>${item.margin || 0}%</td>
+
+        <td>
+          <strong>
+            ${formatRupiah(item.harga_jual)}
+          </strong>
+        </td>
+
+        <td>${stokBadge}</td>
+
+        <td>${item.terjual}</td>
+
+        <td>
+
+          <button
+            class="btn-edit"
+            onclick="openEdit('${item.sku}')"
+          >
+            ✏️
+          </button>
+
+          <button
+            class="btn-delete"
+            onclick="hapusProduk('${item.sku}')"
+          >
+            🗑
+          </button>
+
+        </td>
+
+      </tr>
+
     `;
   });
 
   document.getElementById("listProduk").innerHTML = html;
+
 }
 
 /* =========================
    SEARCH
 ========================= */
 function setupSearch() {
+
   const search = document.getElementById("search");
 
-  search.oninput = function () {
+  search.addEventListener("input", function () {
+
     const keyword = this.value.toLowerCase();
 
-    const filtered = ALL_DATA.filter(item =>
-      item.nama.toLowerCase().includes(keyword) ||
-      item.sku.toLowerCase().includes(keyword)
-    );
+    const filtered = ALL_DATA.filter(item => {
+
+      const nama = String(item.nama || "").toLowerCase();
+
+      const sku = String(item.sku || "").toLowerCase();
+
+      return (
+        nama.includes(keyword) ||
+        sku.includes(keyword)
+      );
+
+    });
 
     renderProduk(filtered);
-  };
-}
 
-/* =========================
-   HAPUS
-========================= */
-async function hapusProduk(sku) {
-  if (!confirm("Yakin hapus produk ini?")) return;
-
-  await request({
-    action: "delete",
-    sku: sku
   });
 
-  loadProduk();
 }
 
 /* =========================
-   OPEN EDIT MODAL
+   HAPUS PRODUK
+========================= */
+async function hapusProduk(sku) {
+
+  const yes = confirm(
+    "Yakin ingin menghapus produk ini?"
+  );
+
+  if (!yes) return;
+
+  try {
+
+    await request({
+      action: "delete",
+      sku: sku
+    });
+
+    loadProduk();
+
+  } catch (err) {
+
+    console.error("DELETE ERROR:", err);
+
+  }
+
+}
+
+/* =========================
+   OPEN MODAL EDIT
 ========================= */
 function openEdit(sku) {
-  const item = ALL_DATA.find(p => p.sku === sku);
+
+  const item = ALL_DATA.find(
+    p => p.sku === sku
+  );
+
   if (!item) return;
 
-  document.getElementById("editSku").value = item.sku;
-  document.getElementById("editNama").value = item.nama;
-  document.getElementById("editModal").value = item.modal;
-  document.getElementById("editMargin").value = item.margin || 0;
-  document.getElementById("editHarga").value = item.harga_jual;
-  document.getElementById("editStok").value = item.stok;
-  document.getElementById("editTerjual").value = item.terjual;
+  document.getElementById("editSku").value =
+    item.sku;
 
-  document.getElementById("modalEdit").style.display = "flex";
+  document.getElementById("editNama").value =
+    item.nama;
+
+  document.getElementById("editModal").value =
+    item.modal;
+
+  document.getElementById("editMargin").value =
+    item.margin || 0;
+
+  document.getElementById("editHarga").value =
+    item.harga_jual;
+
+  document.getElementById("editStok").value =
+    item.stok;
+
+  document.getElementById("editTerjual").value =
+    item.terjual;
+
+  document.getElementById("modalEdit").style.display =
+    "flex";
+
 }
 
 /* =========================
    CLOSE MODAL
 ========================= */
 function closeModal() {
-  document.getElementById("modalEdit").style.display = "none";
+
+  document.getElementById("modalEdit").style.display =
+    "none";
+
+}
+
+/* =========================
+   AUTO HITUNG HARGA
+========================= */
+function autoHitungHarga() {
+
+  const modalInput =
+    document.getElementById("editModal");
+
+  const marginInput =
+    document.getElementById("editMargin");
+
+  if (!modalInput || !marginInput) return;
+
+  modalInput.addEventListener("input", hitungHarga);
+
+  marginInput.addEventListener("input", hitungHarga);
+
+}
+
+/* =========================
+   HITUNG HARGA
+========================= */
+function hitungHarga() {
+
+  const modal =
+    Number(document.getElementById("editModal").value);
+
+  const margin =
+    Number(document.getElementById("editMargin").value);
+
+  const harga =
+    modal + (modal * margin / 100);
+
+  document.getElementById("editHarga").value =
+    Math.round(harga);
+
 }
 
 /* =========================
@@ -119,34 +261,62 @@ function closeModal() {
 ========================= */
 async function simpanEdit() {
 
-  const modal = Number(document.getElementById("editModal").value);
-  const margin = Number(document.getElementById("editMargin").value);
+  try {
 
-  // hitung harga otomatis
-  const harga_jual = modal + (modal * margin / 100);
+    const modal =
+      Number(document.getElementById("editModal").value);
 
-  const data = {
-    sku: document.getElementById("editSku").value,
-    nama: document.getElementById("editNama").value,
-    modal: modal,
-    margin: margin,
-    harga_jual: harga_jual,
-    stok: Number(document.getElementById("editStok").value),
-    terjual: Number(document.getElementById("editTerjual").value)
-  };
+    const margin =
+      Number(document.getElementById("editMargin").value);
 
-  await request({
-    action: "update",
-    data: data
-  });
+    const harga_jual =
+      Number(document.getElementById("editHarga").value);
 
-  closeModal();
-  loadProduk();
+    const data = {
+
+      sku:
+        document.getElementById("editSku").value,
+
+      nama:
+        document.getElementById("editNama").value,
+
+      modal: modal,
+
+      margin: margin,
+
+      harga_jual: harga_jual,
+
+      stok:
+        Number(document.getElementById("editStok").value),
+
+      terjual:
+        Number(document.getElementById("editTerjual").value)
+
+    };
+
+    await request({
+      action: "update",
+      data: data
+    });
+
+    closeModal();
+
+    loadProduk();
+
+  } catch (err) {
+
+    console.error("UPDATE ERROR:", err);
+
+  }
+
 }
 
 /* =========================
    FORMAT RUPIAH
 ========================= */
 function formatRupiah(num) {
-  return "Rp " + Number(num || 0).toLocaleString("id-ID");
+
+  return "Rp " +
+    Number(num || 0).toLocaleString("id-ID");
+
 }
