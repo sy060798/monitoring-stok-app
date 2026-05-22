@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Monitoring Stok App</title>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<!-- 🔵 SIDEBAR (DESKTOP STYLE) -->
+<aside class="sidebar">
+  <div class="logo">
+    <h2>STOK APP</h2>
+  </div>
+
+  <nav>
+    <a class="active" href="index.html">📊 Dashboard</a>
+    <a href="produk.html">📦 Produk</a>
+    <a href="input.html">➕ Input</a>
+    <a href="laporan.html">📈 Laporan</a>
+    <a href="setting.html">⚙️ Setting</a>
+  </nav>
+</aside>
+
+<!-- 🔵 MAIN CONTENT -->
+<main class="main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <h1>Dashboard</h1>
+  </div>
+
+  <!-- CARDS -->
+  <div class="grid">
+
+    <div class="card">
+      <h3>Total Produk</h3>
+      <p id="totalProduk">0</p>
+    </div>
+
+    <div class="card">
+      <h3>Total Stok</h3>
+      <p id="totalStok">0</p>
+    </div>
+
+    <div class="card">
+      <h3>Total Profit</h3>
+      <p id="totalProfit">Rp 0</p>
+    </div>
+
+  </div>
+
+  <!-- AREA CHART / DATA -->
+  <div class="panel">
+    <h3>Ringkasan Sistem</h3>
+    <p>Sistem monitoring stok aktif berjalan.</p>
+  </div>
+
+</main>
+
+<!-- JS -->
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>
