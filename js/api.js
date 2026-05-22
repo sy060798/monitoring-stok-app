@@ -1,10 +1,12 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxS-Dy_OSDzMGVSpl6MbFCQ0aoyZJB17BG3Ue4sDJdCGm-8vOlPa6r8jV6akZ8fYiBQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyztmqRUapHvNGZrEArbwT6ZO_CZ-xn4u4KF7OztOTv1llx8o3GnQWk9mhhKo0qcOUu/exec";
 
 async function request(payload) {
+  const formData = new URLSearchParams();
+  formData.append("data", JSON.stringify(payload));
+
   const res = await fetch(API_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
+    body: formData
   });
 
   return await res.json();
