@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Laporan</title>
+
+<style>
+body { margin:0; font-family:Arial; background:#f4f6f9; display:flex; }
+.sidebar { width:240px; background:#111827; color:white; height:100vh; padding:20px; position:fixed; }
+.sidebar a { display:block; color:#ccc; padding:10px; text-decoration:none; }
+.sidebar a.active { background:#2563eb; color:white; }
+
+.main { margin-left:240px; padding:20px; width:100%; }
+
+.grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; }
+
+.card { background:white; padding:20px; border-radius:10px; }
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+  <a href="index.html">Dashboard</a>
+  <a href="produk.html">Produk</a>
+  <a href="input.html">Input</a>
+  <a class="active" href="laporan.html">Laporan</a>
+  <a href="setting.html">Setting</a>
+</div>
+
+<div class="main">
+
+  <h1>Laporan</h1>
+
+  <div class="grid">
+    <div class="card"><h3>Produk</h3><p id="totalProduk">0</p></div>
+    <div class="card"><h3>Stok</h3><p id="totalStok">0</p></div>
+    <div class="card"><h3>Profit</h3><p id="totalProfit">0</p></div>
+  </div>
+
+</div>
+
+<script src="js/laporan.js"></script>
+
+</body>
+</html>
