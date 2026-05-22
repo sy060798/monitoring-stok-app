@@ -1,17 +1,104 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Monitoring Stok App</title>
+<meta charset="UTF-8">
+<title>Monitoring Stok App</title>
 
-  <link rel="stylesheet" href="css/style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f4f6f9;
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: #111827;
+  color: white;
+  padding: 20px;
+  position: fixed;
+}
+
+.sidebar .logo {
+  margin-bottom: 30px;
+}
+
+.sidebar nav a {
+  display: block;
+  color: #ccc;
+  padding: 10px;
+  text-decoration: none;
+  margin-bottom: 5px;
+  border-radius: 6px;
+}
+
+.sidebar nav a:hover {
+  background: #1f2937;
+  color: white;
+}
+
+.sidebar nav a.active {
+  background: #2563eb;
+  color: white;
+}
+
+/* MAIN */
+.main {
+  margin-left: 240px;
+  padding: 20px;
+  width: 100%;
+}
+
+/* TOPBAR */
+.topbar {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+/* CARD */
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* PANEL */
+.panel {
+  background: white;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* RESPONSIVE (LAPTOP ONLY FOCUS) */
+@media (max-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>
+
 </head>
 
 <body>
 
-<!-- 🔵 SIDEBAR (DESKTOP STYLE) -->
+<!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="logo">
     <h2>STOK APP</h2>
@@ -26,15 +113,13 @@
   </nav>
 </aside>
 
-<!-- 🔵 MAIN CONTENT -->
+<!-- MAIN -->
 <main class="main">
 
-  <!-- TOP BAR -->
   <div class="topbar">
     <h1>Dashboard</h1>
   </div>
 
-  <!-- CARDS -->
   <div class="grid">
 
     <div class="card">
@@ -54,7 +139,6 @@
 
   </div>
 
-  <!-- AREA CHART / DATA -->
   <div class="panel">
     <h3>Ringkasan Sistem</h3>
     <p>Sistem monitoring stok aktif berjalan.</p>
