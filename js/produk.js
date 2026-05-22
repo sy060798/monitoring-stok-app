@@ -47,7 +47,7 @@ function renderProduk(data) {
 
     html = `
       <tr>
-        <td colspan="8" style="text-align:center;">
+        <td colspan="9" style="text-align:center;">
           Tidak ada produk
         </td>
       </tr>
@@ -62,10 +62,12 @@ function renderProduk(data) {
       ? `<span class="badge badge-empty">Habis</span>`
       : `<span class="badge badge-stock">${item.stok}</span>`;
 
-    // 🔥 TAMBAHAN (PROMO INFO - OPTIONAL VIEW)
-    const promoInfo = item.promo_beli
-      ? `<small style="color:#ef4444;">Promo: Rp ${formatRupiah(item.promo_beli)}</small>`
-      : ``;
+    // 🔥 PROMO DISPLAY (WAJIB 0 JIKA NULL)
+    const promo = Number(item.promo_beli || 0);
+
+    const promoInfo = promo > 0
+      ? `<small style="color:#ef4444;">Promo: Rp ${formatRupiah(promo)}</small>`
+      : `<small style="color:#94a3b8;">Promo: 0</small>`;
 
     html += `
 
@@ -133,7 +135,6 @@ function setupSearch() {
     const filtered = ALL_DATA.filter(item => {
 
       const nama = String(item.nama || "").toLowerCase();
-
       const sku = String(item.sku || "").toLowerCase();
 
       return (
@@ -154,10 +155,7 @@ function setupSearch() {
 ========================= */
 async function hapusProduk(sku) {
 
-  const yes = confirm(
-    "Yakin ingin menghapus produk ini?"
-  );
-
+  const yes = confirm("Yakin ingin menghapus produk ini?");
   if (!yes) return;
 
   try {
@@ -182,36 +180,22 @@ async function hapusProduk(sku) {
 ========================= */
 function openEdit(sku) {
 
-  const item = ALL_DATA.find(
-    p => p.sku === sku
-  );
-
+  const item = ALL_DATA.find(p => p.sku === sku);
   if (!item) return;
 
-  document.getElementById("editSku").value =
-    item.sku;
+  document.getElementById("editSku").value = item.sku;
+  document.getElementById("editNama").value = item.nama;
+  document.getElementById("editModal").value = item.modal;
+  document.getElementById("editMargin").value = item.margin || 0;
+  document.getElementById("editHarga").value = item.harga_jual;
+  document.getElementById("editStok").value = item.stok;
+  document.getElementById("editTerjual").value = item.terjual;
 
-  document.getElementById("editNama").value =
-    item.nama;
+  // 🔥 TAMBAHAN PROMO
+  document.getElementById("editPromo").value =
+    Number(item.promo_beli || 0);
 
-  document.getElementById("editModal").value =
-    item.modal;
-
-  document.getElementById("editMargin").value =
-    item.margin || 0;
-
-  document.getElementById("editHarga").value =
-    item.harga_jual;
-
-  document.getElementById("editStok").value =
-    item.stok;
-
-  document.getElementById("editTerjual").value =
-    item.terjual;
-
-  document.getElementById("modalEdit").style.display =
-    "flex";
-
+  document.getElementById("modalEdit").style.display = "flex";
 }
 
 /* =========================
@@ -219,8 +203,7 @@ function openEdit(sku) {
 ========================= */
 function closeModal() {
 
-  document.getElementById("modalEdit").style.display =
-    "none";
+  document.getElementById("modalEdit").style.display = "none";
 
 }
 
@@ -229,16 +212,12 @@ function closeModal() {
 ========================= */
 function autoHitungHarga() {
 
-  const modalInput =
-    document.getElementById("editModal");
-
-  const marginInput =
-    document.getElementById("editMargin");
+  const modalInput = document.getElementById("editModal");
+  const marginInput = document.getElementById("editMargin");
 
   if (!modalInput || !marginInput) return;
 
   modalInput.addEventListener("input", hitungHarga);
-
   marginInput.addEventListener("input", hitungHarga);
 
 }
@@ -269,36 +248,19 @@ async function simpanEdit() {
 
   try {
 
-    const modal =
-      Number(document.getElementById("editModal").value);
-
-    const margin =
-      Number(document.getElementById("editMargin").value);
-
-    const harga_jual =
-      Number(document.getElementById("editHarga").value);
-
     const data = {
 
-      sku:
-        document.getElementById("editSku").value,
+      sku: document.getElementById("editSku").value,
+      nama: document.getElementById("editNama").value,
+      modal: Number(document.getElementById("editModal").value),
+      margin: Number(document.getElementById("editMargin").value),
+      harga_jual: Number(document.getElementById("editHarga").value),
+      stok: Number(document.getElementById("editStok").value),
+      terjual: Number(document.getElementById("editTerjual").value),
 
-      nama:
-        document.getElementById("editNama").value,
+      // 🔥 PROMO MASUK SINI
+      promo_beli: Number(document.getElementById("editPromo").value || 0)
 
-      modal: modal,
-
-      margin: margin,
-
-      harga_jual: harga_jual,
-
-      stok:
-        Number(document.getElementById("editStok").value),
-
-      terjual:
-        Number(document.getElementById("editTerjual").value)
-
-      // 🔥 TIDAK WAJIB TAMBAH promo di sini (sesuai desain kamu)
     };
 
     await request({
@@ -307,7 +269,6 @@ async function simpanEdit() {
     });
 
     closeModal();
-
     loadProduk();
 
   } catch (err) {
