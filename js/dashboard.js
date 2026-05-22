@@ -1,21 +1,12 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxS-Dy_OSDzMGVSpl6MbFCQ0aoyZJB17BG3Ue4sDJdCGm-8vOlPa6r8jV6akZ8fYiBQ/exec";
-
 document.addEventListener("DOMContentLoaded", loadDashboard);
 
 async function loadDashboard() {
   try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        action: "getAllProduk"
-      })
+    const res = await request({
+      action: "getAllProduk"
     });
 
-    const json = await res.json();
-    const data = json.data || [];
+    const data = res.data || [];
 
     renderDashboard(data);
 
@@ -48,5 +39,5 @@ function renderDashboard(data) {
 }
 
 function formatRupiah(num) {
-  return Number(num).toLocaleString("id-ID");
+  return Number(num || 0).toLocaleString("id-ID");
 }
