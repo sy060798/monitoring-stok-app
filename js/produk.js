@@ -62,12 +62,18 @@ function renderProduk(data) {
       ? `<span class="badge badge-empty">Habis</span>`
       : `<span class="badge badge-stock">${item.stok}</span>`;
 
+    // 🔥 TAMBAHAN (PROMO INFO - OPTIONAL VIEW)
+    const promoInfo = item.promo_beli
+      ? `<small style="color:#ef4444;">Promo: Rp ${formatRupiah(item.promo_beli)}</small>`
+      : ``;
+
     html += `
 
       <tr>
 
         <td>
-          <strong>${item.nama}</strong>
+          <strong>${item.nama}</strong><br>
+          ${promoInfo}
         </td>
 
         <td>${item.sku}</td>
@@ -292,6 +298,7 @@ async function simpanEdit() {
       terjual:
         Number(document.getElementById("editTerjual").value)
 
+      // 🔥 TIDAK WAJIB TAMBAH promo di sini (sesuai desain kamu)
     };
 
     await request({
