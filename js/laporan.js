@@ -1,18 +1,18 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxS-Dy_OSDzMGVSpl6MbFCQ0aoyZJB17BG3Ue4sDJdCGm-8vOlPa6r8jV6akZ8fYiBQ/exec";
-
 document.addEventListener("DOMContentLoaded", loadLaporan);
 
 async function loadLaporan() {
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "getAllProduk" })
-  });
+  try {
+    const res = await request({
+      action: "getAllProduk"
+    });
 
-  const json = await res.json();
-  const data = json.data || [];
+    const data = res.data || [];
 
-  renderLaporan(data);
+    renderLaporan(data);
+
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 function renderLaporan(data) {
