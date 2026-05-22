@@ -47,24 +47,20 @@ function renderDashboard(data) {
     const harga =
       Number(item.harga_jual || 0);
 
-    // 🔥 PROMO
+    // 🔥 PROMO LANGSUNG
     const promo =
       Number(item.promo_beli || 0);
-
-    // 🔥 BAGI PROMO PER BARANG
-    const promoPerBarang =
-      promo / Math.max(stok, 1);
 
     totalStok += stok;
 
     totalTerjual += terjual;
 
-    // 🔥 PROFIT REAL
+    // 🔥 PROFIT FINAL
     totalProfit += (
       (
         harga -
         modal +
-        promoPerBarang
+        promo
       ) * terjual
     );
 
@@ -138,14 +134,8 @@ function renderKategori(id, items, title) {
 
   items.forEach(item => {
 
-    const stok =
-      Number(item.stok || 1);
-
     const promo =
       Number(item.promo_beli || 0);
-
-    const promoPerBarang =
-      promo / stok;
 
     const profit =
       (
@@ -153,7 +143,7 @@ function renderKategori(id, items, title) {
         -
         Number(item.modal || 0)
         +
-        promoPerBarang
+        promo
       )
       *
       Number(item.terjual || 0);
@@ -209,14 +199,8 @@ function renderChart(data) {
 
   const profits = data.map(item => {
 
-    const stok =
-      Number(item.stok || 1);
-
     const promo =
       Number(item.promo_beli || 0);
-
-    const promoPerBarang =
-      promo / stok;
 
     return (
       (
@@ -224,7 +208,7 @@ function renderChart(data) {
         -
         Number(item.modal || 0)
         +
-        promoPerBarang
+        promo
       )
       *
       Number(item.terjual || 0)
