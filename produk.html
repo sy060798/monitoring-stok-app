@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Produk</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f4f6f9;
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: #111827;
+  color: white;
+  padding: 20px;
+  position: fixed;
+}
+
+.sidebar nav a {
+  display: block;
+  color: #ccc;
+  padding: 10px;
+  text-decoration: none;
+  margin-bottom: 5px;
+  border-radius: 6px;
+}
+
+.sidebar nav a:hover {
+  background: #1f2937;
+  color: white;
+}
+
+.sidebar nav a.active {
+  background: #2563eb;
+  color: white;
+}
+
+/* MAIN */
+.main {
+  margin-left: 240px;
+  padding: 20px;
+  width: 100%;
+}
+
+.topbar {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+  <h2>STOK APP</h2>
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a class="active" href="produk.html">Produk</a>
+    <a href="input.html">Input</a>
+    <a href="laporan.html">Laporan</a>
+    <a href="setting.html">Setting</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <div class="topbar">
+    <h1>Produk</h1>
+  </div>
+
+  <div id="listProduk" class="grid"></div>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/core.js"></script>
+<script src="js/produk.js"></script>
+
+</body>
+</html>
