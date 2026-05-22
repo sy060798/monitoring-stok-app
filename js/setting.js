@@ -1,23 +1,38 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxS-Dy_OSDzMGVSpl6MbFCQ0aoyZJB17BG3Ue4sDJdCGm-8vOlPa6r8jV6akZ8fYiBQ/exec";
-
 document.addEventListener("DOMContentLoaded", () => {
   const btnSave = document.getElementById("btnSaveSetting");
   const btnApply = document.getElementById("btnApplyAll");
 
   if (btnSave) btnSave.addEventListener("click", saveSetting);
   if (btnApply) btnApply.addEventListener("click", applyToAll);
+
+  loadSetting();
 });
+
+/* =========================
+   LOAD SETTING KE INPUT
+========================= */
+function loadSetting() {
+  const setting = getSetting();
+
+  const ppnEl = document.getElementById("ppn");
+  const marginEl = document.getElementById("margin");
+
+  if (ppnEl) ppnEl.value = setting.ppn;
+  if (marginEl) marginEl.value = setting.margin;
+}
 
 /* =========================
    SIMPAN SETTING (LOCAL)
 ========================= */
 function saveSetting() {
-  const ppn = Number(document.getElementById("ppn").value);
-  const margin = Number(document.getElementById("margin").value);
+  const ppn = Number(document.getElementById("ppn").value || 0);
+  const margin = Number(document.getElementById("margin").value || 0);
 
   const setting = { ppn, margin };
 
   localStorage.setItem("setting", JSON.stringify(setting));
+
+  alert("Setting berhasil disimpan");
 }
 
 /* =========================
@@ -32,32 +47,25 @@ function getSetting() {
    APPLY KE SEMUA PRODUK
 ========================= */
 async function applyToAll() {
-  const setting = getSetting();
+  try {
+    const setting = getSetting();
 
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+    const res = await request({
       action: "getAllProduk"
-    })
-  });
+    });
 
-  const json = await res.json();
-  const data = json.data || [];
+    const data = res.data || [];
 
-  for (let i = 0; i < data.length; i++) {
-    const item = data[i];
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
 
-    const hargaBaru = hitungHargaJual(
-      item.modal,
-      setting.margin,
-      setting.ppn
-    );
+      const hargaBaru = hitungHargaJual(
+        item.modal,
+        setting.margin,
+        setting.ppn
+      );
 
-    await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+      await request({
         action: "update",
         data: {
           sku: item.sku,
@@ -69,9 +77,12 @@ async function applyToAll() {
           stok: item.stok,
           terjual: item.terjual
         }
-      })
-    });
-  }
+      });
+    }
 
-  alert("Semua produk berhasil di-update");
+    alert("Semua produk berhasil di-update");
+  } catch (err) {
+    console.error(err);
+    alert("Gagal update produk");
+  }
 }
