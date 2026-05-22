@@ -219,6 +219,18 @@ body{
     margin-bottom:5px;
 }
 
+.profit{
+    color:#16a34a;
+    font-weight:bold;
+    margin-top:5px;
+}
+
+.promo{
+    color:#ef4444;
+    font-size:13px;
+    margin-top:5px;
+}
+
 /* =========================
    RESPONSIVE
 ========================= */
@@ -385,6 +397,9 @@ body{
 
 document.addEventListener("DOMContentLoaded", loadDashboard);
 
+/* =========================
+   LOAD DASHBOARD
+========================= */
 async function loadDashboard(){
 
     try{
@@ -394,6 +409,8 @@ async function loadDashboard(){
         });
 
         const data = res.data || [];
+
+        console.log(data);
 
         renderDashboard(data);
 
@@ -406,7 +423,7 @@ async function loadDashboard(){
 }
 
 /* =========================
-   RENDER
+   RENDER DASHBOARD
 ========================= */
 function renderDashboard(data){
 
@@ -416,15 +433,33 @@ function renderDashboard(data){
 
     data.forEach(item => {
 
-        const modal = Number(item.modal || 0);
+        const modal =
+            Number(item.modal || 0);
 
-        const harga = Number(item.harga_jual || 0);
+        const harga =
+            Number(item.harga_jual || 0);
 
-        const terjual = Number(item.terjual || 0);
+        const terjual =
+            Number(item.terjual || 0);
+
+        const promo =
+            Number(item.promo_beli || 0);
 
         totalTerjual += terjual;
 
-        totalProfit += (harga - modal) * terjual;
+        // 🔥 PROFIT NORMAL
+        let profitPerBarang =
+            harga - modal;
+
+        // 🔥 TAMBAH PROMO
+        if(promo > 0){
+
+            profitPerBarang += promo;
+
+        }
+
+        totalProfit +=
+            profitPerBarang * terjual;
 
     });
 
@@ -477,14 +512,61 @@ function renderList(id,data){
 
     data.forEach(item=>{
 
+        const modal =
+            Number(item.modal || 0);
+
+        const harga =
+            Number(item.harga_jual || 0);
+
+        const promo =
+            Number(item.promo_beli || 0);
+
+        const terjual =
+            Number(item.terjual || 0);
+
+        let profitPerBarang =
+            harga - modal;
+
+        // 🔥 TAMBAH PROMO
+        if(promo > 0){
+
+            profitPerBarang += promo;
+
+        }
+
+        const totalProfit =
+            profitPerBarang * terjual;
+
         html += `
 
             <div class="item">
 
                 <strong>${item.nama}</strong>
 
+                SKU:
+                ${item.sku}
+                <br><br>
+
                 Terjual:
-                ${item.terjual}
+                ${terjual}
+
+                <div class="profit">
+                    Profit:
+                    ${formatRupiah(totalProfit)}
+                </div>
+
+                ${
+                    promo > 0
+                    ?
+                    `
+                    <div class="promo">
+                        Promo Supplier:
+                        +${formatRupiah(promo)}
+                    </div>
+                    `
+                    :
+                    ``
+                }
 
             </div>
 
