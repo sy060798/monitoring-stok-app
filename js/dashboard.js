@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", loadDashboard);
    LOAD DASHBOARD
 ========================= */
 async function loadDashboard() {
+
   try {
 
     const res = await request({
@@ -15,8 +16,11 @@ async function loadDashboard() {
     renderDashboard(data);
 
   } catch (err) {
+
     console.error(err);
+
   }
+
 }
 
 /* =========================
@@ -27,39 +31,47 @@ function renderDashboard(data) {
   let totalProduk = data.length;
   let totalStok = 0;
   let totalProfit = 0;
-  let totalProfitReal = 0;
   let totalTerjual = 0;
 
   data.forEach(item => {
 
-    const stok = Number(item.stok || 0);
-    const terjual = Number(item.terjual || 0);
-    const modal = Number(item.modal || 0);
-    const harga = Number(item.harga_jual || 0);
+    const stok =
+      Number(item.stok || 0);
 
-    // 🔥 PROMO DATA (kalau ada)
-    const promo = Number(item.promo_beli || 0);
-    const qty = Number(item.qty_beli || 1);
+    const terjual =
+      Number(item.terjual || 0);
+
+    const modal =
+      Number(item.modal || 0);
+
+    const harga =
+      Number(item.harga_jual || 0);
+
+    // 🔥 PROMO
+    const promo =
+      Number(item.promo_beli || 0);
+
+    // 🔥 BAGI PROMO PER BARANG
+    const promoPerBarang =
+      promo / Math.max(stok, 1);
 
     totalStok += stok;
+
     totalTerjual += terjual;
 
-    // =========================
-    // PROFIT NORMAL (TIDAK DIUBAH)
-    // =========================
-    totalProfit += (harga - modal) * terjual;
-
-    // =========================
-    // PROFIT REAL (DENGAN PROMO)
-    // =========================
-    const modalReal = modal - (promo / qty);
-
-    totalProfitReal += (harga - modalReal) * terjual;
+    // 🔥 PROFIT REAL
+    totalProfit += (
+      (
+        harga -
+        modal +
+        promoPerBarang
+      ) * terjual
+    );
 
   });
 
   /* =========================
-     CARD ATAS
+     CARD
   ========================= */
 
   document.getElementById("totalProduk").innerText =
@@ -71,21 +83,18 @@ function renderDashboard(data) {
   document.getElementById("totalProfit").innerText =
     formatRupiah(totalProfit);
 
-  // 🔥 TAMBAHAN CARD (kalau ada di HTML)
-  if (document.getElementById("totalProfitReal")) {
-    document.getElementById("totalProfitReal").innerText =
-      formatRupiah(totalProfitReal);
-  }
-
   document.getElementById("totalTerjual").innerText =
     totalTerjual;
 
   /* =========================
-     FAST / MEDIUM / SLOW
+     SORTING
   ========================= */
 
   const sorted = [...data].sort((a, b) => {
-    return Number(b.terjual || 0) - Number(a.terjual || 0);
+
+    return Number(b.terjual || 0)
+      - Number(a.terjual || 0);
+
   });
 
   renderKategori(
@@ -107,7 +116,7 @@ function renderDashboard(data) {
   );
 
   /* =========================
-     GRAFIK PROFIT (NORMAL)
+     GRAFIK
   ========================= */
 
   renderChart(data);
@@ -122,14 +131,30 @@ function renderKategori(id, items, title) {
   let html = `<h3>${title}</h3>`;
 
   if (items.length === 0) {
+
     html += `<p>Tidak ada data</p>`;
+
   }
 
   items.forEach(item => {
 
+    const stok =
+      Number(item.stok || 1);
+
+    const promo =
+      Number(item.promo_beli || 0);
+
+    const promoPerBarang =
+      promo / stok;
+
     const profit =
-      (Number(item.harga_jual || 0) -
-      Number(item.modal || 0))
+      (
+        Number(item.harga_jual || 0)
+        -
+        Number(item.modal || 0)
+        +
+        promoPerBarang
+      )
       *
       Number(item.terjual || 0);
 
@@ -142,6 +167,7 @@ function renderKategori(id, items, title) {
         </div>
 
         <div>
+
           <span class="badge">
             ${item.terjual || 0} terjual
           </span>
@@ -149,13 +175,16 @@ function renderKategori(id, items, title) {
           <p class="profit">
             ${formatRupiah(profit)}
           </p>
+
         </div>
 
       </div>
     `;
+
   });
 
   document.getElementById(id).innerHTML = html;
+
 }
 
 /* =========================
@@ -168,55 +197,95 @@ function renderChart(data) {
 
   if (!canvas) return;
 
-  const ctx = canvas.getContext("2d");
+  const ctx =
+    canvas.getContext("2d");
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
 
   const profits = data.map(item => {
+
+    const stok =
+      Number(item.stok || 1);
+
+    const promo =
+      Number(item.promo_beli || 0);
+
+    const promoPerBarang =
+      promo / stok;
+
     return (
-      (Number(item.harga_jual || 0) -
-      Number(item.modal || 0))
+      (
+        Number(item.harga_jual || 0)
+        -
+        Number(item.modal || 0)
+        +
+        promoPerBarang
+      )
       *
       Number(item.terjual || 0)
     );
+
   });
 
   if (profits.length === 0) return;
 
-  const maxProfit = Math.max(...profits, 1);
+  const maxProfit =
+    Math.max(...profits, 1);
 
-  const width = canvas.width;
-  const height = canvas.height;
+  const width =
+    canvas.width;
 
-  const stepX = width / profits.length;
+  const height =
+    canvas.height;
+
+  const stepX =
+    width / profits.length;
 
   ctx.beginPath();
+
   ctx.lineWidth = 3;
+
   ctx.strokeStyle = "#2563eb";
 
   profits.forEach((value, index) => {
 
-    const x = index * stepX;
+    const x =
+      index * stepX;
 
     const y =
       height -
-      (value / maxProfit) * (height - 20);
+      (
+        value / maxProfit
+      ) * (height - 20);
 
     if (index === 0) {
+
       ctx.moveTo(x, y);
+
     } else {
+
       ctx.lineTo(x, y);
+
     }
 
   });
 
   ctx.stroke();
+
 }
 
 /* =========================
    FORMAT RUPIAH
 ========================= */
 function formatRupiah(num) {
-  return "Rp " + Number(num || 0)
+
+  return "Rp " +
+    Number(num || 0)
     .toLocaleString("id-ID");
+
 }
