@@ -27,6 +27,7 @@ function renderDashboard(data) {
   let totalProduk = data.length;
   let totalStok = 0;
   let totalProfit = 0;
+  let totalProfitReal = 0;
   let totalTerjual = 0;
 
   data.forEach(item => {
@@ -36,9 +37,24 @@ function renderDashboard(data) {
     const modal = Number(item.modal || 0);
     const harga = Number(item.harga_jual || 0);
 
+    // 🔥 PROMO DATA (kalau ada)
+    const promo = Number(item.promo_beli || 0);
+    const qty = Number(item.qty_beli || 1);
+
     totalStok += stok;
     totalTerjual += terjual;
+
+    // =========================
+    // PROFIT NORMAL (TIDAK DIUBAH)
+    // =========================
     totalProfit += (harga - modal) * terjual;
+
+    // =========================
+    // PROFIT REAL (DENGAN PROMO)
+    // =========================
+    const modalReal = modal - (promo / qty);
+
+    totalProfitReal += (harga - modalReal) * terjual;
 
   });
 
@@ -54,6 +70,12 @@ function renderDashboard(data) {
 
   document.getElementById("totalProfit").innerText =
     formatRupiah(totalProfit);
+
+  // 🔥 TAMBAHAN CARD (kalau ada di HTML)
+  if (document.getElementById("totalProfitReal")) {
+    document.getElementById("totalProfitReal").innerText =
+      formatRupiah(totalProfitReal);
+  }
 
   document.getElementById("totalTerjual").innerText =
     totalTerjual;
@@ -85,7 +107,7 @@ function renderDashboard(data) {
   );
 
   /* =========================
-     GRAFIK PROFIT
+     GRAFIK PROFIT (NORMAL)
   ========================= */
 
   renderChart(data);
