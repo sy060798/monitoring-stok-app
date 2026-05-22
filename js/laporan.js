@@ -21,6 +21,9 @@ function renderLaporan(data) {
   let totalTerjual = 0;
   let totalProfit = 0;
 
+  // 🔥 TAMBAHAN BARU
+  let totalProfitReal = 0;
+
   for (let i = 0; i < data.length; i++) {
     const item = data[i];
 
@@ -29,16 +32,39 @@ function renderLaporan(data) {
     const modal = Number(item.modal || 0);
     const harga = Number(item.harga_jual || 0);
 
+    // promo dari supplier (WAJIB ADA DI DATA)
+    const promo = Number(item.promo_beli || 0);
+    const qty = Number(item.qty_beli || 1);
+
     totalStok += stok;
     totalTerjual += terjual;
+
+    // =========================
+    // PROFIT LAMA (TIDAK DIUBAH)
+    // =========================
     totalProfit += (harga - modal) * terjual;
+
+    // =========================
+    // PROFIT REAL (DENGAN PROMO)
+    // =========================
+    const modalReal = modal - (promo / qty);
+
+    totalProfitReal += (harga - modalReal) * terjual;
   }
 
   document.getElementById("totalProduk").innerText = totalProduk;
   document.getElementById("totalStok").innerText = totalStok;
   document.getElementById("totalTerjual").innerText = totalTerjual;
+
+  // profit lama (tetap)
   document.getElementById("totalProfit").innerText =
     "Rp " + formatRupiah(totalProfit);
+
+  // 🔥 TAMBAHAN: profit real
+  if (document.getElementById("totalProfitReal")) {
+    document.getElementById("totalProfitReal").innerText =
+      "Rp " + formatRupiah(totalProfitReal);
+  }
 }
 
 function formatRupiah(num) {
