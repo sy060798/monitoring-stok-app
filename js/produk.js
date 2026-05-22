@@ -1,18 +1,18 @@
-const API_URL = "PASTE_URL_GOOGLE_APPS_SCRIPT_KAMU";
-
 document.addEventListener("DOMContentLoaded", loadProduk);
 
 async function loadProduk() {
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "getAllProduk" })
-  });
+  try {
+    const res = await request({
+      action: "getAllProduk"
+    });
 
-  const json = await res.json();
-  const data = json.data || [];
+    const data = res.data || [];
 
-  renderProduk(data);
+    renderProduk(data);
+
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 function renderProduk(data) {
@@ -38,13 +38,9 @@ function renderProduk(data) {
 }
 
 async function hapusProduk(sku) {
-  await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      action: "delete",
-      sku: sku
-    })
+  await request({
+    action: "delete",
+    sku: sku
   });
 
   loadProduk();
@@ -68,13 +64,9 @@ function editProduk(sku) {
 }
 
 async function updateProduk(data) {
-  await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      action: "update",
-      data: data
-    })
+  await request({
+    action: "update",
+    data: data
   });
 
   loadProduk();
