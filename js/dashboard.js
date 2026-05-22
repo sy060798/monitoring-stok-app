@@ -1,4 +1,4 @@
-const API_URL = "PASTE_URL_GOOGLE_APPS_SCRIPT_KAMU";
+const API_URL = "https://script.google.com/macros/s/AKfycbxS-Dy_OSDzMGVSpl6MbFCQ0aoyZJB17BG3Ue4sDJdCGm-8vOlPa6r8jV6akZ8fYiBQ/exec";
 
 document.addEventListener("DOMContentLoaded", loadDashboard);
 
