@@ -70,14 +70,20 @@ function hitungProfit(item){
   const promo =
     Number(item.promo_beli || 0);
 
-  const qtyBeli =
-    Number(item.qty_beli || 1);
+  // =========================
+  // BAGI PROMO BERDASARKAN
+  // JUMLAH TERJUAL
+  // =========================
+  const pembagiPromo =
+    terjual > 0
+    ? terjual
+    : 1;
 
   // =========================
   // PROMO PER PCS
   // =========================
   const promoPerBarang =
-    promo / qtyBeli;
+    promo / pembagiPromo;
 
   // =========================
   // MARGIN NORMAL
@@ -140,9 +146,6 @@ function renderDashboard(data){
     const promo =
       Number(item.promo_beli || 0);
 
-    const qtyBeli =
-      Number(item.qty_beli || 1);
-
     // =========================
     // TOTAL
     // =========================
@@ -151,10 +154,19 @@ function renderDashboard(data){
     totalTerjual += terjual;
 
     // =========================
+    // BAGI PROMO BERDASARKAN
+    // JUMLAH TERJUAL
+    // =========================
+    const pembagiPromo =
+      terjual > 0
+      ? terjual
+      : 1;
+
+    // =========================
     // PROMO PER PCS
     // =========================
     const promoPerBarang =
-      promo / qtyBeli;
+      promo / pembagiPromo;
 
     // =========================
     // MARGIN NORMAL
