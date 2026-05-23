@@ -21,14 +21,21 @@ async function loadDashboard(){
       action:"getAllProduk"
     });
 
-    console.log("DATA API:", res);
+    console.log(
+      "DATA API:",
+      res
+    );
 
     // =========================
     // DATA ARRAY
     // =========================
-    const data = res.data || [];
+    const data =
+      res.data || [];
 
-    console.log("DATA PRODUK:", data);
+    console.log(
+      "DATA PRODUK:",
+      data
+    );
 
     // =========================
     // RENDER
@@ -79,7 +86,7 @@ function hitungProfit(item){
     hargaJual - modal;
 
   // =========================
-  // PROFIT PER BARANG
+  // PROFIT FINAL PCS
   // =========================
   const profitPerBarang =
     margin + promoPerBarang;
@@ -99,7 +106,10 @@ function renderDashboard(data){
   // =========================
   // TOTAL
   // =========================
-  let totalProduk = data.length;
+  let totalProduk =
+    data.length;
+
+  let totalStok = 0;
 
   let totalTerjual = 0;
 
@@ -110,21 +120,59 @@ function renderDashboard(data){
   // =========================
   data.forEach(item => {
 
-    console.log("ITEM:", item);
+    console.log(
+      "ITEM:",
+      item
+    );
 
-    // =========================
-    // TERJUAL
-    // =========================
+    const stok =
+      Number(item.stok || 0);
+
     const terjual =
       Number(item.terjual || 0);
 
+    const modal =
+      Number(item.modal || 0);
+
+    const hargaJual =
+      Number(item.harga_jual || 0);
+
+    const promo =
+      Number(item.promo_beli || 0);
+
+    const qtyBeli =
+      Number(item.qty_beli || 1);
+
+    // =========================
+    // TOTAL
+    // =========================
+    totalStok += stok;
+
     totalTerjual += terjual;
+
+    // =========================
+    // PROMO PER PCS
+    // =========================
+    const promoPerBarang =
+      promo / qtyBeli;
+
+    // =========================
+    // MARGIN NORMAL
+    // =========================
+    const margin =
+      hargaJual - modal;
+
+    // =========================
+    // PROFIT FINAL PCS
+    // =========================
+    const profitPerBarang =
+      margin + promoPerBarang;
 
     // =========================
     // TOTAL PROFIT
     // =========================
     totalProfit +=
-      hitungProfit(item);
+      profitPerBarang * terjual;
 
   });
 
@@ -139,6 +187,11 @@ function renderDashboard(data){
   const elProduk =
     document.getElementById(
       "totalProduk"
+    );
+
+  const elStok =
+    document.getElementById(
+      "totalStok"
     );
 
   const elTerjual =
@@ -158,6 +211,13 @@ function renderDashboard(data){
 
     elProduk.innerText =
       totalProduk;
+
+  }
+
+  if(elStok){
+
+    elStok.innerText =
+      totalStok;
 
   }
 
@@ -237,7 +297,7 @@ function renderList(id,data){
   let html = "";
 
   // =========================
-  // KOSONG
+  // DATA KOSONG
   // =========================
   if(data.length === 0){
 
@@ -252,7 +312,7 @@ function renderList(id,data){
   }
 
   // =========================
-  // LOOP
+  // LOOP DATA
   // =========================
   data.forEach(item => {
 
