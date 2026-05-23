@@ -24,7 +24,10 @@ async function loadDashboard(){
 
   }catch(err){
 
-    console.log(err);
+    console.log(
+      "Gagal load dashboard:",
+      err
+    );
 
   }
 
@@ -80,23 +83,22 @@ function hitungProfit(item){
 // =====================================
 function renderDashboard(data){
 
+  // =========================
+  // TOTAL
+  // =========================
   let totalProduk = data.length;
-
-  let totalStok = 0;
 
   let totalTerjual = 0;
 
   let totalProfit = 0;
 
+  // =========================
+  // LOOP DATA
+  // =========================
   data.forEach(item => {
-
-    const stok =
-      Number(item.stok || 0);
 
     const terjual =
       Number(item.terjual || 0);
-
-    totalStok += stok;
 
     totalTerjual += terjual;
 
@@ -109,24 +111,46 @@ function renderDashboard(data){
   });
 
   // =========================
-  // RENDER CARD
+  // ELEMENT
   // =========================
-  document.getElementById(
-    "totalProduk"
-  ).innerText = totalProduk;
+  const elProduk =
+    document.getElementById(
+      "totalProduk"
+    );
 
-  document.getElementById(
-    "totalStok"
-  ).innerText = totalStok;
+  const elTerjual =
+    document.getElementById(
+      "totalTerjual"
+    );
 
-  document.getElementById(
-    "totalTerjual"
-  ).innerText = totalTerjual;
+  const elProfit =
+    document.getElementById(
+      "totalProfit"
+    );
 
-  document.getElementById(
-    "totalProfit"
-  ).innerText =
-    formatRupiah(totalProfit);
+  // =========================
+  // RENDER
+  // =========================
+  if(elProduk){
+
+    elProduk.innerText =
+      totalProduk;
+
+  }
+
+  if(elTerjual){
+
+    elTerjual.innerText =
+      totalTerjual;
+
+  }
+
+  if(elProfit){
+
+    elProfit.innerText =
+      formatRupiah(totalProfit);
+
+  }
 
   // =========================
   // MOVING
@@ -140,15 +164,16 @@ function renderDashboard(data){
 // =====================================
 function renderMoving(data){
 
-  const sorted = [...data].sort(
+  const sorted =
+    [...data].sort(
 
-    (a,b)=>
+      (a,b)=>
 
-      Number(b.terjual || 0)
-      -
-      Number(a.terjual || 0)
+        Number(b.terjual || 0)
+        -
+        Number(a.terjual || 0)
 
-  );
+    );
 
   // =========================
   // FAST
@@ -181,8 +206,31 @@ function renderMoving(data){
 // =====================================
 function renderList(id,data){
 
+  const element =
+    document.getElementById(id);
+
+  if(!element) return;
+
   let html = "";
 
+  // =========================
+  // KOSONG
+  // =========================
+  if(data.length === 0){
+
+    html = `
+
+      <div class="item">
+        Belum ada data
+      </div>
+
+    `;
+
+  }
+
+  // =========================
+  // LOOP
+  // =========================
   data.forEach(item => {
 
     const profit =
@@ -238,8 +286,7 @@ function renderList(id,data){
 
   });
 
-  document.getElementById(id)
-    .innerHTML = html;
+  element.innerHTML = html;
 
 }
 
