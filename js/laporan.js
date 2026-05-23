@@ -3,13 +3,15 @@
 // SISTEM STOCK BATCH DROPSHIP
 // ===============================
 
+// ===============================
 // DATA GLOBAL
+// ===============================
 let allData = [];
 
 // ===============================
 // LOAD DATA
 // ===============================
-function loadDashboard() {
+function loadDashboard(){
 
   try{
 
@@ -17,7 +19,9 @@ function loadDashboard() {
     // AMBIL DATA LOCAL STORAGE
     // =========================
     allData = JSON.parse(
-      localStorage.getItem("produkData")
+      localStorage.getItem(
+        "produkData"
+      )
     ) || [];
 
     console.log(
@@ -25,6 +29,9 @@ function loadDashboard() {
       allData
     );
 
+    // =========================
+    // RENDER
+    // =========================
     renderDashboard(allData);
 
   }catch(err){
@@ -41,12 +48,13 @@ function loadDashboard() {
 // ===============================
 // RENDER DASHBOARD
 // ===============================
-function renderDashboard(data) {
+function renderDashboard(data){
 
   // =========================
   // TOTAL
   // =========================
-  let totalProduk = data.length;
+  let totalProduk =
+    data.length;
 
   let totalStok = 0;
 
@@ -80,8 +88,34 @@ function renderDashboard(data) {
   // =========================
   if(!tbody) return;
 
+  // =========================
   // RESET TABLE
+  // =========================
   tbody.innerHTML = "";
+
+  // =========================
+  // DATA KOSONG
+  // =========================
+  if(data.length === 0){
+
+    tbody.innerHTML = `
+
+      <tr>
+
+        <td
+          colspan="6"
+          class="empty"
+        >
+
+          Belum ada data produk
+
+        </td>
+
+      </tr>
+
+    `;
+
+  }
 
   // =========================
   // LOOP DATA
@@ -99,6 +133,9 @@ function renderDashboard(data) {
     const terjual =
       Number(item.terjual || 0);
 
+    // =========================
+    // SISA STOK
+    // =========================
     const sisa =
       stok - terjual;
 
@@ -108,6 +145,27 @@ function renderDashboard(data) {
     totalStok += stok;
 
     totalTerjual += terjual;
+
+    // =========================
+    // STATUS
+    // =========================
+    const status =
+      item.status || "BARU";
+
+    // =========================
+    // CLASS STATUS
+    // =========================
+    let statusClass = "baru";
+
+    if(
+      status
+      .toLowerCase()
+      .includes("lama")
+    ){
+
+      statusClass = "lama";
+
+    }
 
     // =========================
     // RENDER ROW
@@ -125,7 +183,16 @@ function renderDashboard(data) {
         </td>
 
         <td>
-          ${item.status || "BARU"}
+
+          <span class="
+            status
+            ${statusClass}
+          ">
+
+            ${status}
+
+          </span>
+
         </td>
 
         <td>
@@ -152,7 +219,7 @@ function renderDashboard(data) {
   );
 
   // =========================
-  // TOTAL CARD
+  // RENDER TOTAL
   // =========================
   if(elProduk){
 
@@ -189,31 +256,48 @@ if(searchInput){
 
   searchInput.addEventListener(
     "input",
-    function () {
+    function(){
 
       const keyword =
-        this.value.toLowerCase();
+        this.value
+        .toLowerCase();
 
+      // =====================
+      // FILTER DATA
+      // =====================
       const filtered =
         allData.filter(item => {
 
+          const nama =
+            (item.nama || "")
+            .toLowerCase();
+
+          const sku =
+            (item.sku || "")
+            .toLowerCase();
+
           return (
 
-            (item.nama || "")
-              .toLowerCase()
-              .includes(keyword)
+            nama.includes(
+              keyword
+            )
 
             ||
 
-            (item.sku || "")
-              .toLowerCase()
-              .includes(keyword)
+            sku.includes(
+              keyword
+            )
 
           );
 
         });
 
-      renderDashboard(filtered);
+      // =====================
+      // RENDER FILTER
+      // =====================
+      renderDashboard(
+        filtered
+      );
 
   });
 
