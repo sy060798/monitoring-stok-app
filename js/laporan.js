@@ -1,72 +1,137 @@
-document.addEventListener("DOMContentLoaded", loadLaporan);
+// ===============================
+// LAPORAN.JS
+// SISTEM STOCK BATCH DROPSHIP
+// ===============================
 
-async function loadLaporan() {
-  try {
-    const res = await request({
-      action: "getAllProduk"
-    });
+// DATA GLOBAL
+let allData = [];
 
-    const data = res.data || [];
+// LOAD DATA
+function loadDashboard() {
 
-    renderLaporan(data);
+  // AMBIL DATA DARI LOCAL STORAGE
+  allData = JSON.parse(
+    localStorage.getItem("produkData")
+  ) || [];
 
-  } catch (err) {
-    console.error(err);
-  }
+  renderDashboard(allData);
+
 }
 
-function renderLaporan(data) {
+// ===============================
+// RENDER DASHBOARD
+// ===============================
+function renderDashboard(data) {
+
   let totalProduk = data.length;
   let totalStok = 0;
   let totalTerjual = 0;
-  let totalProfit = 0;
 
-  // 🔥 TAMBAHAN BARU
-  let totalProfitReal = 0;
+  const tbody =
+    document.getElementById("dashboardBody");
 
-  for (let i = 0; i < data.length; i++) {
-    const item = data[i];
+  // RESET TABLE
+  tbody.innerHTML = "";
 
-    const stok = Number(item.stok || 0);
-    const terjual = Number(item.terjual || 0);
-    const modal = Number(item.modal || 0);
-    const harga = Number(item.harga_jual || 0);
+  // LOOP DATA
+  data.forEach(item => {
 
-    // promo dari supplier (WAJIB ADA DI DATA)
-    const promo = Number(item.promo_beli || 0);
-    const qty = Number(item.qty_beli || 1);
+    const stok =
+      Number(item.stok || 0);
+
+    const terjual =
+      Number(item.terjual || 0);
+
+    const sisa =
+      stok - terjual;
 
     totalStok += stok;
     totalTerjual += terjual;
 
-    // =========================
-    // PROFIT LAMA (TIDAK DIUBAH)
-    // =========================
-    totalProfit += (harga - modal) * terjual;
+    // RENDER ROW
+    tbody.innerHTML += `
 
-    // =========================
-    // PROFIT REAL (DENGAN PROMO)
-    // =========================
-    const modalReal = modal - (promo / qty);
+      <tr>
 
-    totalProfitReal += (harga - modalReal) * terjual;
-  }
+        <td>
+          ${item.sku || "-"}
+        </td>
 
-  document.getElementById("totalProduk").innerText = totalProduk;
-  document.getElementById("totalStok").innerText = totalStok;
-  document.getElementById("totalTerjual").innerText = totalTerjual;
+        <td>
+          ${item.nama || "-"}
+        </td>
 
-  // profit lama (tetap)
-  document.getElementById("totalProfit").innerText =
-    "Rp " + formatRupiah(totalProfit);
+        <td>
+          ${item.status || "BARU"}
+        </td>
 
-  // 🔥 TAMBAHAN: profit real
-  if (document.getElementById("totalProfitReal")) {
-    document.getElementById("totalProfitReal").innerText =
-      "Rp " + formatRupiah(totalProfitReal);
-  }
+        <td>
+          ${stok}
+        </td>
+
+        <td>
+          ${terjual}
+        </td>
+
+        <td>
+          ${sisa}
+        </td>
+
+      </tr>
+
+    `;
+
+  });
+
+  // TOTAL
+  document.getElementById(
+    "totalProduk"
+  ).innerText = totalProduk;
+
+  document.getElementById(
+    "totalStok"
+  ).innerText = totalStok;
+
+  document.getElementById(
+    "totalTerjual"
+  ).innerText = totalTerjual;
+
 }
 
-function formatRupiah(num) {
-  return Number(num || 0).toLocaleString("id-ID");
-}
+// ===============================
+// SEARCH SKU / NAMA PRODUK
+// ===============================
+document
+  .getElementById("searchInput")
+  .addEventListener("input", function () {
+
+    const keyword =
+      this.value.toLowerCase();
+
+    const filtered =
+      allData.filter(item => {
+
+        return (
+
+          item.nama
+            .toLowerCase()
+            .includes(keyword)
+
+          ||
+
+          item.sku
+            .toLowerCase()
+            .includes(keyword)
+
+        );
+
+      });
+
+    renderDashboard(filtered);
+
+});
+
+// ===============================
+// LOAD AWAL
+// ===============================
+loadDashboard();
