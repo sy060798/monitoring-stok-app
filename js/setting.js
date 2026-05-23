@@ -7,31 +7,17 @@ document.addEventListener(
   () => {
 
     const btnSave =
-      document.getElementById(
-        "btnSaveSetting"
-      );
+      document.getElementById("btnSaveSetting");
 
     const btnApply =
-      document.getElementById(
-        "btnApplyAll"
-      );
+      document.getElementById("btnApplyAll");
 
     if(btnSave){
-
-      btnSave.addEventListener(
-        "click",
-        saveSetting
-      );
-
+      btnSave.addEventListener("click", saveSetting);
     }
 
     if(btnApply){
-
-      btnApply.addEventListener(
-        "click",
-        applyToAll
-      );
-
+      btnApply.addEventListener("click", applyToAll);
     }
 
     loadSetting();
@@ -44,47 +30,33 @@ document.addEventListener(
 // =========================
 function loadSetting() {
 
-  const setting =
-    getSetting();
+  const setting = getSetting();
 
-  const ppnEl =
-    document.getElementById(
-      "ppn"
-    );
+  const ppnEl = document.getElementById("ppn");
 
   if(ppnEl){
-
-    ppnEl.value =
-      setting.ppn;
-
+    ppnEl.value = setting.ppn;
   }
 
 }
 
 // =========================
-// SIMPAN SETTING
+// SIMPAN SETTING (PPN ONLY)
 // =========================
 function saveSetting() {
 
-  const ppn =
-    Number(
-      document.getElementById(
-        "ppn"
-      ).value || 0
-    );
+  const ppn = Number(
+    document.getElementById("ppn").value || 0
+  );
 
-  const setting = {
-    ppn
-  };
+  const setting = { ppn };
 
   localStorage.setItem(
     "setting",
     JSON.stringify(setting)
   );
 
-  alert(
-    "PPN berhasil disimpan"
-  );
+  alert("PPN berhasil disimpan");
 
 }
 
@@ -93,10 +65,7 @@ function saveSetting() {
 // =========================
 function getSetting() {
 
-  const data =
-    localStorage.getItem(
-      "setting"
-    );
+  const data = localStorage.getItem("setting");
 
   return data
     ? JSON.parse(data)
@@ -105,113 +74,76 @@ function getSetting() {
 }
 
 // =========================
-// HITUNG HARGA + PPN
+// HITUNG HARGA (MARGIN + PPN)
 // =========================
-function hitungHargaPPN(
-  modal,
-  ppn
-){
+function hitungHargaJual(modal, margin, ppn) {
 
-  modal =
-    Number(modal || 0);
+  modal = Number(modal || 0);
+  margin = Number(margin || 0);
+  ppn = Number(ppn || 0);
 
-  ppn =
-    Number(ppn || 0);
+  // 1. tambah margin dulu
+  const hargaMargin =
+    modal + (modal * margin / 100);
 
-  const total =
-    modal + (
-      modal * ppn / 100
-    );
+  // 2. baru tambah PPN
+  const hargaFinal =
+    hargaMargin + (hargaMargin * ppn / 100);
 
-  return Math.round(total);
-
+  return Math.round(hargaFinal);
 }
 
 // =========================
 // APPLY PPN KE SEMUA PRODUK
+// (TIDAK MERUSAK DATA LAIN)
 // =========================
 async function applyToAll() {
 
-  try{
+  try {
 
-    const setting =
-      getSetting();
+    const setting = getSetting();
 
-    // =====================
-    // AMBIL SEMUA PRODUK
-    // =====================
-    const res =
-      await request({
-        action:"getAllProduk"
-      });
+    const res = await request({
+      action: "getAllProduk"
+    });
 
-    const data =
-      res.data || [];
+    const data = res.data || [];
 
-    // =====================
-    // LOOP UPDATE
-    // =====================
-    for(let i = 0; i < data.length; i++){
+    for (let i = 0; i < data.length; i++) {
 
-      const item =
-        data[i];
+      const item = data[i];
 
-      // ===================
+      // =========================
       // HITUNG HARGA BARU
-      // ===================
-      const hargaBaru =
-        hitungHargaPPN(
-          item.modal,
-          setting.ppn
-        );
+      // =========================
+      const hargaBaru = hitungHargaJual(
+        item.modal,
+        item.margin,   // <- dari data produk
+        setting.ppn
+      );
 
-      // ===================
+      // =========================
       // UPDATE PRODUK
-      // ===================
+      // (PAKAI SPREAD BIAR AMAN)
+      // =========================
       await request({
+        action: "update",
+        data: {
+          ...item, // penting: biar margin & data lain tidak hilang
 
-        action:"update",
-
-        data:{
-
-          sku:
-            item.sku,
-
-          nama:
-            item.nama,
-
-          modal:
-            item.modal,
-
-          ppn:
-            setting.ppn,
-
-          harga_jual:
-            hargaBaru,
-
-          stok:
-            item.stok,
-
-          terjual:
-            item.terjual
-
+          ppn: setting.ppn,
+          harga_jual: hargaBaru
         }
-
       });
 
     }
 
-    alert(
-      "PPN semua produk berhasil di-update"
-    );
+    alert("PPN semua produk berhasil di-update");
 
-  }catch(err){
+  } catch (err) {
 
     console.error(err);
-
-    alert(
-      "Gagal update PPN produk"
-    );
+    alert("Gagal update PPN produk");
 
   }
 
