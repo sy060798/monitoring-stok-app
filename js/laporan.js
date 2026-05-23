@@ -6,15 +6,35 @@
 // DATA GLOBAL
 let allData = [];
 
+// ===============================
 // LOAD DATA
+// ===============================
 function loadDashboard() {
 
-  // AMBIL DATA DARI LOCAL STORAGE
-  allData = JSON.parse(
-    localStorage.getItem("produkData")
-  ) || [];
+  try{
 
-  renderDashboard(allData);
+    // =========================
+    // AMBIL DATA LOCAL STORAGE
+    // =========================
+    allData = JSON.parse(
+      localStorage.getItem("produkData")
+    ) || [];
+
+    console.log(
+      "DATA LAPORAN:",
+      allData
+    );
+
+    renderDashboard(allData);
+
+  }catch(err){
+
+    console.log(
+      "Gagal load laporan:",
+      err
+    );
+
+  }
 
 }
 
@@ -23,18 +43,55 @@ function loadDashboard() {
 // ===============================
 function renderDashboard(data) {
 
+  // =========================
+  // TOTAL
+  // =========================
   let totalProduk = data.length;
+
   let totalStok = 0;
+
   let totalTerjual = 0;
 
+  // =========================
+  // ELEMENT
+  // =========================
   const tbody =
-    document.getElementById("dashboardBody");
+    document.getElementById(
+      "dashboardBody"
+    );
+
+  const elProduk =
+    document.getElementById(
+      "totalProduk"
+    );
+
+  const elStok =
+    document.getElementById(
+      "totalStok"
+    );
+
+  const elTerjual =
+    document.getElementById(
+      "totalTerjual"
+    );
+
+  // =========================
+  // VALIDASI
+  // =========================
+  if(!tbody) return;
 
   // RESET TABLE
   tbody.innerHTML = "";
 
+  // =========================
   // LOOP DATA
+  // =========================
   data.forEach(item => {
+
+    console.log(
+      "ITEM LAPORAN:",
+      item
+    );
 
     const stok =
       Number(item.stok || 0);
@@ -45,10 +102,16 @@ function renderDashboard(data) {
     const sisa =
       stok - terjual;
 
+    // =========================
+    // TOTAL
+    // =========================
     totalStok += stok;
+
     totalTerjual += terjual;
 
+    // =========================
     // RENDER ROW
+    // =========================
     tbody.innerHTML += `
 
       <tr>
@@ -83,55 +146,83 @@ function renderDashboard(data) {
 
   });
 
-  // TOTAL
-  document.getElementById(
-    "totalProduk"
-  ).innerText = totalProduk;
+  console.log(
+    "TOTAL TERJUAL LAPORAN:",
+    totalTerjual
+  );
 
-  document.getElementById(
-    "totalStok"
-  ).innerText = totalStok;
+  // =========================
+  // TOTAL CARD
+  // =========================
+  if(elProduk){
 
-  document.getElementById(
-    "totalTerjual"
-  ).innerText = totalTerjual;
+    elProduk.innerText =
+      totalProduk;
+
+  }
+
+  if(elStok){
+
+    elStok.innerText =
+      totalStok;
+
+  }
+
+  if(elTerjual){
+
+    elTerjual.innerText =
+      totalTerjual;
+
+  }
 
 }
 
 // ===============================
 // SEARCH SKU / NAMA PRODUK
 // ===============================
-document
-  .getElementById("searchInput")
-  .addEventListener("input", function () {
+const searchInput =
+  document.getElementById(
+    "searchInput"
+  );
 
-    const keyword =
-      this.value.toLowerCase();
+if(searchInput){
 
-    const filtered =
-      allData.filter(item => {
+  searchInput.addEventListener(
+    "input",
+    function () {
 
-        return (
+      const keyword =
+        this.value.toLowerCase();
 
-          item.nama
-            .toLowerCase()
-            .includes(keyword)
+      const filtered =
+        allData.filter(item => {
 
-          ||
+          return (
 
-          item.sku
-            .toLowerCase()
-            .includes(keyword)
+            (item.nama || "")
+              .toLowerCase()
+              .includes(keyword)
 
-        );
+            ||
 
-      });
+            (item.sku || "")
+              .toLowerCase()
+              .includes(keyword)
 
-    renderDashboard(filtered);
+          );
 
-});
+        });
+
+      renderDashboard(filtered);
+
+  });
+
+}
 
 // ===============================
 // LOAD AWAL
 // ===============================
-loadDashboard();
+document.addEventListener(
+  "DOMContentLoaded",
+  loadDashboard
+);
