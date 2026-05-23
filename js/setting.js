@@ -12,12 +12,21 @@ document.addEventListener(
     const btnApply =
       document.getElementById("btnApplyAll");
 
+    // 🔥 TOMBOL BARU: update harga saja
+    const btnUpdateHarga =
+      document.getElementById("btnUpdateHarga");
+
     if(btnSave){
       btnSave.addEventListener("click", saveSetting);
     }
 
     if(btnApply){
       btnApply.addEventListener("click", applyToAll);
+    }
+
+    // 🔥 EVENT BARU
+    if(btnUpdateHarga){
+      btnUpdateHarga.addEventListener("click", updateHargaOnly);
     }
 
     loadSetting();
@@ -82,11 +91,9 @@ function hitungHargaJual(modal, margin, ppn) {
   margin = Number(margin || 0);
   ppn = Number(ppn || 0);
 
-  // 1. tambah margin dulu
   const hargaMargin =
     modal + (modal * margin / 100);
 
-  // 2. baru tambah PPN
   const hargaFinal =
     hargaMargin + (hargaMargin * ppn / 100);
 
@@ -95,7 +102,7 @@ function hitungHargaJual(modal, margin, ppn) {
 
 // =========================
 // APPLY PPN KE SEMUA PRODUK
-// (TIDAK MERUSAK DATA LAIN)
+// (FULL UPDATE)
 // =========================
 async function applyToAll() {
 
@@ -113,24 +120,16 @@ async function applyToAll() {
 
       const item = data[i];
 
-      // =========================
-      // HITUNG HARGA BARU
-      // =========================
       const hargaBaru = hitungHargaJual(
         item.modal,
-        item.margin,   // <- dari data produk
+        item.margin,
         setting.ppn
       );
 
-      // =========================
-      // UPDATE PRODUK
-      // (PAKAI SPREAD BIAR AMAN)
-      // =========================
       await request({
         action: "update",
         data: {
-          ...item, // penting: biar margin & data lain tidak hilang
-
+          ...item,
           ppn: setting.ppn,
           harga_jual: hargaBaru
         }
@@ -144,6 +143,53 @@ async function applyToAll() {
 
     console.error(err);
     alert("Gagal update PPN produk");
+
+  }
+
+}
+
+// ===============================
+// 🔥 BARU: UPDATE HARGA SAJA
+// (tanpa ubah data lain)
+// ===============================
+async function updateHargaOnly() {
+
+  try {
+
+    const setting = getSetting();
+
+    const res = await request({
+      action: "getAllProduk"
+    });
+
+    const data = res.data || [];
+
+    for (let i = 0; i < data.length; i++) {
+
+      const item = data[i];
+
+      const hargaBaru = hitungHargaJual(
+        item.modal,
+        item.margin,
+        setting.ppn
+      );
+
+      await request({
+        action: "update",
+        data: {
+          ...item, // amanin semua data
+          harga_jual: hargaBaru
+        }
+      });
+
+    }
+
+    alert("Harga jual berhasil di-update sesuai PPN");
+
+  } catch (err) {
+
+    console.error(err);
+    alert("Gagal update harga jual");
 
   }
 
