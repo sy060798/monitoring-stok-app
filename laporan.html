@@ -2,8 +2,11 @@
 <html lang="id">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Laporan Stok</title>
 
@@ -22,7 +25,7 @@
    BODY
 ========================= */
 body{
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
     background:#f1f5f9;
     display:flex;
     color:#0f172a;
@@ -78,15 +81,15 @@ body{
 }
 
 /* =========================
-   HEADER
+   TOPBAR
 ========================= */
 .topbar{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:25px;
-    flex-wrap:wrap;
     gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:25px;
 }
 
 .topbar h1{
@@ -112,20 +115,25 @@ body{
 }
 
 /* =========================
-   GRID CARD
+   CARD GRID
 ========================= */
 .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
     gap:18px;
     margin-bottom:25px;
 }
 
+/* =========================
+   CARD
+========================= */
 .card{
     background:#fff;
     border-radius:16px;
     padding:22px;
-    box-shadow:0 4px 15px rgba(0,0,0,.05);
+    box-shadow:
+    0 4px 15px rgba(0,0,0,.05);
 }
 
 .card h3{
@@ -148,7 +156,8 @@ body{
     border-radius:18px;
     padding:20px;
     overflow:auto;
-    box-shadow:0 4px 15px rgba(0,0,0,.05);
+    box-shadow:
+    0 4px 15px rgba(0,0,0,.05);
 }
 
 table{
@@ -185,14 +194,14 @@ td{
     display:inline-block;
 }
 
-.status.lama{
-    background:#fee2e2;
-    color:#dc2626;
-}
-
 .status.baru{
     background:#dcfce7;
     color:#16a34a;
+}
+
+.status.lama{
+    background:#fee2e2;
+    color:#dc2626;
 }
 
 /* =========================
@@ -231,6 +240,7 @@ td{
 }
 
 </style>
+
 </head>
 
 <body>
@@ -242,17 +252,28 @@ td{
 
     <h2>STOK APP</h2>
 
-    <a href="index.html">📊 Dashboard</a>
-
-    <a href="produk.html">📦 Produk</a>
-
-    <a href="input.html">➕ Input</a>
-
-    <a class="active" href="laporan.html">
-        📈 Laporan
+    <a href="index.html">
+        📊 Dashboard
     </a>
 
-    <a href="setting.html">⚙️ Setting</a>
+    <a href="produk.html">
+        📦 Produk
+    </a>
+
+    <a href="input.html">
+        ➕ Input
+    </a>
+
+    <a class="active"
+    href="laporan.html">
+
+        📈 Laporan
+
+    </a>
+
+    <a href="setting.html">
+        ⚙️ Setting
+    </a>
 
 </div>
 
@@ -261,11 +282,14 @@ td{
 ========================= -->
 <div class="main">
 
-    <!-- HEADER -->
+    <!-- TOPBAR -->
     <div class="topbar">
 
-        <h1>Laporan Stok</h1>
+        <h1>
+            Laporan Stok
+        </h1>
 
+        <!-- SEARCH -->
         <div class="search-box">
 
             <input
@@ -278,31 +302,60 @@ td{
 
     </div>
 
-    <!-- CARD -->
+    <!-- =====================
+         CARD
+    ====================== -->
     <div class="grid">
 
+        <!-- TOTAL PRODUK -->
         <div class="card">
-            <h3>Total Produk</h3>
-            <p id="totalProduk">0</p>
+
+            <h3>
+                Total Produk
+            </h3>
+
+            <p id="totalProduk">
+                0
+            </p>
+
         </div>
 
+        <!-- TOTAL STOK -->
         <div class="card">
-            <h3>Total Stok</h3>
-            <p id="totalStok">0</p>
+
+            <h3>
+                Total Stok
+            </h3>
+
+            <p id="totalStok">
+                0
+            </p>
+
         </div>
 
+        <!-- TOTAL TERJUAL -->
         <div class="card">
-            <h3>Total Terjual</h3>
-            <p id="totalTerjual">0</p>
+
+            <h3>
+                Total Terjual
+            </h3>
+
+            <p id="totalTerjual">
+                0
+            </p>
+
         </div>
 
     </div>
 
-    <!-- TABLE -->
+    <!-- =====================
+         TABLE
+    ====================== -->
     <div class="table-container">
 
         <table>
 
+            <!-- HEAD -->
             <thead>
 
                 <tr>
@@ -323,12 +376,17 @@ td{
 
             </thead>
 
+            <!-- BODY -->
             <tbody id="dashboardBody">
 
                 <tr>
 
-                    <td colspan="6" class="empty">
+                    <td
+                    colspan="6"
+                    class="empty">
+
                         Belum ada data produk
+
                     </td>
 
                 </tr>
@@ -341,9 +399,13 @@ td{
 
 </div>
 
-<!-- SCRIPT -->
+<!-- =========================
+     SCRIPT
+========================= -->
 <script src="js/api.js"></script>
+
 <script src="js/core.js"></script>
+
 <script src="js/laporan.js"></script>
 
 </body>
