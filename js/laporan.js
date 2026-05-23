@@ -56,12 +56,18 @@ async function loadDashboard() {
 function renderDashboard(data) {
 
   // =========================
-  // SORT BERDASARKAN NAMA
+  // COPY DATA AGAR ASLI TIDAK BERUBAH
+  // =========================
+  data = [...data];
+
+  // =========================
+  // SORT DATA LAMA -> BARU
+  // BERDASARKAN SKU
   // =========================
   data.sort((a,b)=>{
 
-    return (a.nama || "")
-      .localeCompare(b.nama || "");
+    return (a.sku || "")
+      .localeCompare(b.sku || "");
 
   });
 
@@ -122,6 +128,8 @@ function renderDashboard(data) {
 
     `;
 
+    return;
+
   }
 
   // =========================
@@ -162,25 +170,32 @@ function renderDashboard(data) {
       item.nama || "-";
 
     // =========================
+    // KEY DUPLIKAT
+    // BIAR TIDAK SENSITIF HURUF
+    // =========================
+    const namaKey =
+      nama.trim().toLowerCase();
+
+    // =========================
     // TRACK DUPLIKAT
     // =========================
-    if(!namaTracker[nama]){
+    if(!namaTracker[namaKey]){
 
-      namaTracker[nama] = 1;
+      namaTracker[namaKey] = 1;
 
     }else{
 
-      namaTracker[nama]++;
+      namaTracker[namaKey]++;
 
     }
 
     // =========================
-    // STATUS OTOMATIS
+    // STATUS
     // PERTAMA = LAMA
     // SELANJUTNYA = BARU
     // =========================
     const status =
-      namaTracker[nama] === 1
+      namaTracker[namaKey] === 1
       ? "LAMA"
       : "BARU";
 
@@ -278,7 +293,9 @@ document.addEventListener(
         function(){
 
           const keyword =
-            this.value.toLowerCase();
+            this.value
+              .toLowerCase()
+              .trim();
 
           const filtered =
             allData.filter(item => {
