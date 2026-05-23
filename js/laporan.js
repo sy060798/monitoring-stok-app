@@ -61,11 +61,29 @@ function renderDashboard(data) {
   data = [...data];
 
   // =========================
-  // SORT DATA LAMA -> BARU
-  // BERDASARKAN SKU
+  // SORT:
+  // 1. NAMA PRODUK
+  // 2. SKU LAMA -> BARU
   // =========================
   data.sort((a,b)=>{
 
+    const namaA =
+      (a.nama || "")
+      .toLowerCase();
+
+    const namaB =
+      (b.nama || "")
+      .toLowerCase();
+
+    // SORT NAMA DULU
+    if(namaA !== namaB){
+
+      return namaA.localeCompare(namaB);
+
+    }
+
+    // JIKA NAMA SAMA
+    // URUTKAN SKU LAMA -> BARU
     return (a.sku || "")
       .localeCompare(b.sku || "");
 
@@ -133,11 +151,6 @@ function renderDashboard(data) {
   }
 
   // =========================
-  // TRACKER NAMA
-  // =========================
-  const namaTracker = {};
-
-  // =========================
   // LOOP DATA
   // =========================
   data.forEach(item => {
@@ -171,33 +184,65 @@ function renderDashboard(data) {
 
     // =========================
     // KEY DUPLIKAT
-    // BIAR TIDAK SENSITIF HURUF
     // =========================
     const namaKey =
       nama.trim().toLowerCase();
 
     // =========================
-    // TRACK DUPLIKAT
+    // AMBIL SEMUA PRODUK
+    // DENGAN NAMA SAMA
     // =========================
-    if(!namaTracker[namaKey]){
+    const sameProducts =
+      data.filter(p => {
 
-      namaTracker[namaKey] = 1;
+        return (
+          (p.nama || "")
+          .trim()
+          .toLowerCase() === namaKey
+        );
+
+      });
+
+    // =========================
+    // PRODUK YANG
+    // STOK MASIH ADA
+    // =========================
+    const activeProducts =
+      sameProducts.filter(p => {
+
+        return Number(p.stok || 0) > 0;
+
+      });
+
+    // =========================
+    // STATUS DEFAULT
+    // =========================
+    let status = "BARU";
+
+    // =========================
+    // JIKA STOK HABIS
+    // =========================
+    if(stok <= 0){
+
+      status = "HABIS";
 
     }else{
 
-      namaTracker[namaKey]++;
+      // =======================
+      // PRODUK PERTAMA
+      // YANG MASIH ADA
+      // MENJADI LAMA
+      // =======================
+      const firstActiveSku =
+        activeProducts[0]?.sku;
+
+      if(item.sku === firstActiveSku){
+
+        status = "LAMA";
+
+      }
 
     }
-
-    // =========================
-    // STATUS
-    // PERTAMA = LAMA
-    // SELANJUTNYA = BARU
-    // =========================
-    const status =
-      namaTracker[namaKey] === 1
-      ? "LAMA"
-      : "BARU";
 
     const statusClass =
       status.toLowerCase();
