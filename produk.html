@@ -1,98 +1,450 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Produk</title>
 
 <style>
-/* =========================
-   (CSS TETAP - TIDAK DIUBAH)
-========================= */
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:Arial,sans-serif;background:#f1f5f9;display:flex;color:#1e293b;}
-.sidebar{width:250px;height:100vh;background:#0f172a;position:fixed;left:0;top:0;padding:25px 18px;overflow-y:auto;}
-.sidebar h2{color:#fff;margin-bottom:30px;font-size:26px;letter-spacing:1px;}
-.sidebar a{display:flex;align-items:center;gap:10px;color:#cbd5e1;text-decoration:none;padding:14px;margin-bottom:10px;border-radius:10px;transition:.3s;font-size:15px;}
-.sidebar a:hover{background:#1e293b;color:#fff;}
-.sidebar a.active{background:#2563eb;color:#fff;}
-.main{margin-left:250px;width:calc(100% - 250px);padding:25px;}
-.topbar{background:#fff;padding:22px;border-radius:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;box-shadow:0 4px 15px rgba(0,0,0,.05);}
-.topbar h1{font-size:28px;}
-.search-box{margin-bottom:20px;}
-.search-box input{width:100%;padding:14px 18px;border:none;border-radius:12px;background:#fff;font-size:15px;box-shadow:0 2px 10px rgba(0,0,0,.05);}
-.search-box input:focus{outline:none;border:2px solid #2563eb;}
-.table-container{background:#fff;border-radius:14px;overflow:auto;box-shadow:0 4px 15px rgba(0,0,0,.05);}
-table{width:100%;border-collapse:collapse;min-width:1000px;}
-table thead{background:#0f172a;color:#fff;}
-table th{padding:18px;text-align:left;font-size:14px;font-weight:600;white-space:nowrap;}
-table td{padding:16px 18px;border-bottom:1px solid #e2e8f0;font-size:14px;white-space:nowrap;}
-table tbody tr:hover{background:#f8fafc;}
-button{border:none;padding:9px 14px;border-radius:8px;cursor:pointer;font-size:13px;transition:.2s;}
-.btn-edit{background:#f59e0b;color:#fff;margin-right:5px;}
-.btn-edit:hover{background:#d97706;}
-.btn-delete{background:#ef4444;color:#fff;}
-.btn-delete:hover{background:#dc2626;}
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:999;}
-.modal-content{background:#fff;width:420px;border-radius:16px;padding:25px;}
-.modal-content input{width:100%;padding:13px;margin-bottom:12px;border:1px solid #ddd;border-radius:10px;}
-.modal-action{display:flex;gap:10px;}
-.modal-action button{flex:1;padding:12px;}
-.btn-save{background:#2563eb;color:#fff;}
-.btn-close{background:#e2e8f0;}
+
+/* =====================================
+RESET
+===================================== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+/* =====================================
+BODY
+===================================== */
+body{
+    font-family:Arial,sans-serif;
+    background:#f1f5f9;
+    display:flex;
+    color:#1e293b;
+}
+
+/* =====================================
+SIDEBAR
+===================================== */
+.sidebar{
+    width:250px;
+    height:100vh;
+    background:#0f172a;
+    position:fixed;
+    left:0;
+    top:0;
+    padding:25px 18px;
+    overflow-y:auto;
+}
+
+.sidebar h2{
+    color:#fff;
+    margin-bottom:30px;
+    font-size:28px;
+    letter-spacing:1px;
+}
+
+.sidebar a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#cbd5e1;
+    text-decoration:none;
+    padding:14px;
+    margin-bottom:10px;
+    border-radius:12px;
+    transition:.3s;
+    font-size:15px;
+}
+
+.sidebar a:hover{
+    background:#1e293b;
+    color:#fff;
+}
+
+.sidebar a.active{
+    background:#2563eb;
+    color:#fff;
+}
+
+/* =====================================
+MAIN
+===================================== */
+.main{
+    margin-left:250px;
+    width:calc(100% - 250px);
+    padding:30px;
+}
+
+/* =====================================
+TOPBAR
+===================================== */
+.topbar{
+    background:#fff;
+    padding:24px 28px;
+    border-radius:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:22px;
+    box-shadow:0 4px 15px rgba(0,0,0,.05);
+}
+
+.topbar h1{
+    font-size:32px;
+    font-weight:bold;
+}
+
+/* =====================================
+SEARCH
+===================================== */
+.search-box{
+    margin-bottom:22px;
+}
+
+.search-box input{
+    width:100%;
+    padding:16px 20px;
+    border:none;
+    border-radius:14px;
+    background:#fff;
+    font-size:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+    transition:.2s;
+}
+
+.search-box input:focus{
+    outline:none;
+    border:2px solid #2563eb;
+}
+
+/* =====================================
+TABLE CONTAINER
+===================================== */
+.table-container{
+    background:#fff;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 4px 15px rgba(0,0,0,.05);
+}
+
+/* =====================================
+TABLE
+===================================== */
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+/* =====================================
+THEAD
+===================================== */
+table thead{
+    background:#0f172a;
+    color:#fff;
+}
+
+table th{
+    padding:18px 16px;
+    text-align:left;
+    font-size:13px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+/* =====================================
+TBODY
+===================================== */
+table td{
+    padding:18px 16px;
+    border-bottom:1px solid #e2e8f0;
+    font-size:14px;
+    vertical-align:middle;
+}
+
+table tbody tr{
+    transition:.2s;
+}
+
+table tbody tr:hover{
+    background:#f8fafc;
+}
+
+/* =====================================
+NAMA PRODUK
+===================================== */
+.nama-produk{
+    min-width:320px;
+}
+
+.nama-title{
+    font-weight:700;
+    font-size:14px;
+    margin-bottom:5px;
+    color:#0f172a;
+}
+
+.nama-promo{
+    font-size:12px;
+    color:#ef4444;
+}
+
+/* =====================================
+TEXT
+===================================== */
+.text-center{
+    text-align:center;
+}
+
+.text-right{
+    text-align:right;
+}
+
+/* =====================================
+BADGE
+===================================== */
+.badge{
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:50px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.badge-habis{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+.badge-aktif{
+    background:#dcfce7;
+    color:#16a34a;
+}
+
+/* =====================================
+BUTTON
+===================================== */
+.action{
+    display:flex;
+    gap:8px;
+}
+
+button{
+    border:none;
+    padding:10px 13px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.2s;
+}
+
+.btn-edit{
+    background:#f59e0b;
+    color:#fff;
+}
+
+.btn-edit:hover{
+    background:#d97706;
+}
+
+.btn-delete{
+    background:#ef4444;
+    color:#fff;
+}
+
+.btn-delete:hover{
+    background:#dc2626;
+}
+
+/* =====================================
+MODAL
+===================================== */
+.modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.5);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+.modal-content{
+    background:#fff;
+    width:430px;
+    border-radius:20px;
+    padding:25px;
+}
+
+.modal-content h3{
+    margin-bottom:20px;
+}
+
+.modal-content input{
+    width:100%;
+    padding:14px;
+    margin-bottom:12px;
+    border:1px solid #ddd;
+    border-radius:12px;
+    font-size:14px;
+}
+
+.modal-action{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+}
+
+.modal-action button{
+    flex:1;
+    padding:13px;
+}
+
+.btn-save{
+    background:#2563eb;
+    color:#fff;
+}
+
+.btn-close{
+    background:#e2e8f0;
+}
+
+/* =====================================
+RESPONSIVE
+===================================== */
+@media(max-width:1200px){
+
+    .table-container{
+        overflow-x:auto;
+    }
+
+    table{
+        min-width:1100px;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+        padding:18px;
+    }
+
+    .topbar h1{
+        font-size:24px;
+    }
+
+}
+
 </style>
 </head>
 
 <body>
 
+<!-- =====================================
+SIDEBAR
+===================================== -->
 <div class="sidebar">
+
     <h2>STOK APP</h2>
-    <a href="index.html">📊 Dashboard</a>
-    <a class="active" href="produk.html">📦 Produk</a>
-    <a href="input.html">➕ Input</a>
-    <a href="laporan.html">📈 Laporan</a>
-    <a href="setting.html">⚙️ Setting</a>
+
+    <a href="index.html">
+        📊 Dashboard
+    </a>
+
+    <a class="active" href="produk.html">
+        📦 Produk
+    </a>
+
+    <a href="input.html">
+        ➕ Input
+    </a>
+
+    <a href="laporan.html">
+        📈 Laporan
+    </a>
+
+    <a href="setting.html">
+        ⚙️ Setting
+    </a>
+
 </div>
 
+<!-- =====================================
+MAIN
+===================================== -->
 <div class="main">
 
+    <!-- TOPBAR -->
     <div class="topbar">
+
         <h1>Data Produk</h1>
+
     </div>
 
+    <!-- SEARCH -->
     <div class="search-box">
-        <input type="text" id="search" placeholder="🔍 Cari nama produk / SKU...">
+
+        <input
+            type="text"
+            id="search"
+            placeholder="🔍 Cari nama produk / SKU..."
+        >
+
     </div>
 
+    <!-- TABLE -->
     <div class="table-container">
 
         <table>
+
             <thead>
+
                 <tr>
+
                     <th>Nama Produk</th>
                     <th>SKU</th>
                     <th>Modal</th>
                     <th>Margin</th>
                     <th>Harga Jual</th>
-
-                    <!-- 🔥 TAMBAHAN -->
                     <th>Promo Beli</th>
-
                     <th>Stok</th>
                     <th>Terjual</th>
-                    <th>Aksi</th>
+                    <th class="text-center">Aksi</th>
+
                 </tr>
+
             </thead>
 
-            <tbody id="listProduk"></tbody>
+            <tbody id="listProduk">
+
+                <!-- DATA DARI JS -->
+
+            </tbody>
+
         </table>
 
     </div>
 
 </div>
 
-<!-- MODAL -->
+<!-- =====================================
+MODAL
+===================================== -->
 <div class="modal" id="modalEdit">
 
     <div class="modal-content">
@@ -101,25 +453,63 @@ button{border:none;padding:9px 14px;border-radius:8px;cursor:pointer;font-size:1
 
         <input type="hidden" id="editSku">
 
-        <input type="text" id="editNama" placeholder="Nama Produk">
+        <input
+            type="text"
+            id="editNama"
+            placeholder="Nama Produk"
+        >
 
-        <input type="number" id="editModal" placeholder="Modal">
+        <input
+            type="number"
+            id="editModal"
+            placeholder="Modal"
+        >
 
-        <input type="number" id="editMargin" placeholder="Margin %">
+        <input
+            type="number"
+            id="editMargin"
+            placeholder="Margin %"
+        >
 
-        <input type="number" id="editHarga" placeholder="Harga Jual">
+        <input
+            type="number"
+            id="editHarga"
+            placeholder="Harga Jual"
+        >
 
-        <!-- 🔥 TAMBAHAN INPUT PROMO -->
-        <input type="number" id="editPromo" placeholder="Promo Beli (total potongan)">
+        <input
+            type="number"
+            id="editPromo"
+            placeholder="Promo Beli"
+        >
 
-        <input type="number" id="editStok" placeholder="Stok">
+        <input
+            type="number"
+            id="editStok"
+            placeholder="Stok"
+        >
 
-        <input type="number" id="editTerjual" placeholder="Terjual">
+        <input
+            type="number"
+            id="editTerjual"
+            placeholder="Terjual"
+        >
 
         <div class="modal-action">
 
-            <button class="btn-save" onclick="simpanEdit()">Simpan</button>
-            <button class="btn-close" onclick="closeModal()">Tutup</button>
+            <button
+                class="btn-save"
+                onclick="simpanEdit()"
+            >
+                Simpan
+            </button>
+
+            <button
+                class="btn-close"
+                onclick="closeModal()"
+            >
+                Tutup
+            </button>
 
         </div>
 
@@ -127,6 +517,9 @@ button{border:none;padding:9px 14px;border-radius:8px;cursor:pointer;font-size:1
 
 </div>
 
+<!-- =====================================
+SCRIPT
+===================================== -->
 <script src="js/api.js"></script>
 <script src="js/core.js"></script>
 <script src="js/produk.js"></script>
