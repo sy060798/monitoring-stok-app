@@ -248,9 +248,209 @@ function renderDashboard(data){
   }
 
   // =========================
+  // CHART UPDATE
+  // =========================
+  updateCharts(data);
+
+  // =========================
   // MOVING
   // =========================
   renderMoving(data);
+
+}
+
+// =====================================
+// UPDATE CHART
+// =====================================
+function updateCharts(data){
+
+  // =========================
+  // KATEGORI
+  // =========================
+  const sorted =
+    [...data].sort(
+
+      (a,b)=>
+
+        Number(b.terjual || 0)
+        -
+        Number(a.terjual || 0)
+
+    );
+
+  const fast =
+    sorted.slice(0,3);
+
+  const medium =
+    sorted.slice(3,6);
+
+  const slow =
+    sorted.slice(-3);
+
+  // =========================
+  // TOTAL PRODUK
+  // =========================
+  const jumlahFast =
+    fast.length;
+
+  const jumlahMedium =
+    medium.length;
+
+  const jumlahSlow =
+    slow.length;
+
+  // =========================
+  // TOTAL PROFIT
+  // =========================
+  const profitFast =
+    fast.reduce(
+      (a,b)=>a + hitungProfit(b),
+      0
+    );
+
+  const profitMedium =
+    medium.reduce(
+      (a,b)=>a + hitungProfit(b),
+      0
+    );
+
+  const profitSlow =
+    slow.reduce(
+      (a,b)=>a + hitungProfit(b),
+      0
+    );
+
+  // =====================================
+  // CHART DONUT
+  // =====================================
+  const donut =
+    document.getElementById(
+      "chartDonut"
+    );
+
+  if(
+    donut &&
+    typeof Chart !== "undefined"
+  ){
+
+    if(window.donutChart){
+
+      window.donutChart.destroy();
+
+    }
+
+    window.donutChart =
+      new Chart(donut,{
+
+        type:"doughnut",
+
+        data:{
+          labels:[
+            "Fast Moving",
+            "Medium Moving",
+            "Slow Moving"
+          ],
+
+          datasets:[{
+            data:[
+              jumlahFast,
+              jumlahMedium,
+              jumlahSlow
+            ],
+
+            backgroundColor:[
+              "#ef4444",
+              "#f59e0b",
+              "#22c55e"
+            ],
+
+            borderWidth:0
+          }]
+        },
+
+        options:{
+          responsive:true,
+
+          plugins:{
+            legend:{
+              position:"bottom"
+            }
+          }
+        }
+
+      });
+
+  }
+
+  // =====================================
+  // CHART PROFIT
+  // =====================================
+  const bar =
+    document.getElementById(
+      "chartProfit"
+    );
+
+  if(
+    bar &&
+    typeof Chart !== "undefined"
+  ){
+
+    if(window.barChart){
+
+      window.barChart.destroy();
+
+    }
+
+    window.barChart =
+      new Chart(bar,{
+
+        type:"bar",
+
+        data:{
+          labels:[
+            "Fast",
+            "Medium",
+            "Slow"
+          ],
+
+          datasets:[{
+            label:"Profit",
+
+            data:[
+              profitFast,
+              profitMedium,
+              profitSlow
+            ],
+
+            backgroundColor:[
+              "#ef4444",
+              "#f59e0b",
+              "#22c55e"
+            ],
+
+            borderRadius:10
+          }]
+        },
+
+        options:{
+          responsive:true,
+
+          plugins:{
+            legend:{
+              display:false
+            }
+          },
+
+          scales:{
+            y:{
+              beginAtZero:true
+            }
+          }
+        }
+
+      });
+
+  }
 
 }
 
@@ -275,7 +475,8 @@ function renderMoving(data){
   // =========================
   renderList(
     "fastMoving",
-    sorted.slice(0,3)
+    sorted.slice(0,3),
+    "fast"
   );
 
   // =========================
@@ -283,7 +484,8 @@ function renderMoving(data){
   // =========================
   renderList(
     "mediumMoving",
-    sorted.slice(3,6)
+    sorted.slice(3,6),
+    "medium"
   );
 
   // =========================
@@ -291,7 +493,8 @@ function renderMoving(data){
   // =========================
   renderList(
     "slowMoving",
-    sorted.slice(-3)
+    sorted.slice(-3),
+    "slow"
   );
 
 }
@@ -299,7 +502,7 @@ function renderMoving(data){
 // =====================================
 // RENDER LIST
 // =====================================
-function renderList(id,data){
+function renderList(id,data,type){
 
   const element =
     document.getElementById(id);
@@ -315,13 +518,37 @@ function renderList(id,data){
 
     html = `
 
-      <div class="item">
+      <div class="item empty">
         Belum ada data
       </div>
 
     `;
 
   }
+
+  // =========================
+  // TOTAL PROFIT
+  // =========================
+  const totalProfit =
+    data.reduce(
+      (a,b)=>a + hitungProfit(b),
+      0
+    );
+
+  // =========================
+  // HEADER BADGE
+  // =========================
+  html += `
+
+    <div class="moving-header">
+
+      <div class="badge ${type}">
+        ${data.length} Produk
+      </div>
+
+    </div>
+
+  `;
 
   // =========================
   // LOOP DATA
@@ -331,55 +558,37 @@ function renderList(id,data){
     const profit =
       hitungProfit(item);
 
-    const promo =
-      Number(item.promo_beli || 0);
-
     html += `
 
-      <div class="item">
+      <div class="product-row">
 
-        <strong>
+        <div class="product-name">
           ${item.nama || "-"}
-        </strong>
-
-        <br>
-
-        SKU:
-        ${item.sku || "-"}
-
-        <br><br>
-
-        Stok:
-        ${item.stok || 0}
-
-        <br>
-
-        Terjual:
-        ${item.terjual || 0}
-
-        <div class="profit">
-
-          Profit:
-          ${formatRupiah(profit)}
-
         </div>
 
-        ${promo > 0 ? `
-
-          <div class="promo">
-
-            Promo Supplier:
-            ${formatRupiah(promo)}
-
-          </div>
-
-        ` : ""}
+        <div class="product-profit">
+          ${formatRupiah(profit)}
+        </div>
 
       </div>
 
     `;
 
   });
+
+  // =========================
+  // TOTAL PROFIT
+  // =========================
+  html += `
+
+    <div class="total-profit">
+
+      Total Profit :
+      ${formatRupiah(totalProfit)}
+
+    </div>
+
+  `;
 
   element.innerHTML = html;
 
