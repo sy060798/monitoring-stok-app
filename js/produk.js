@@ -66,8 +66,8 @@ function renderProduk(data) {
     const promo = Number(item.promo_beli || 0);
 
     const promoInfo = promo > 0
-      ? `<small style="color:#ef4444;">Promo: Rp ${formatRupiah(promo)}</small>`
-      : `<small style="color:#94a3b8;">Promo: 0</small>`;
+  ? `<small style="color:#ef4444;">Promo: ${formatRupiah(promo)}</small>`
+  : `<small style="color:#94a3b8;">Promo: 0</small>`;
 
     html += `
 
