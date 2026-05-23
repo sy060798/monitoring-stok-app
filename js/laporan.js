@@ -56,6 +56,16 @@ async function loadDashboard() {
 function renderDashboard(data) {
 
   // =========================
+  // SORT BERDASARKAN NAMA
+  // =========================
+  data.sort((a,b)=>{
+
+    return (a.nama || "")
+      .localeCompare(b.nama || "");
+
+  });
+
+  // =========================
   // TOTAL
   // =========================
   let totalProduk = data.length;
@@ -115,6 +125,11 @@ function renderDashboard(data) {
   }
 
   // =========================
+  // TRACKER NAMA
+  // =========================
+  const namaTracker = {};
+
+  // =========================
   // LOOP DATA
   // =========================
   data.forEach(item => {
@@ -141,10 +156,33 @@ function renderDashboard(data) {
     totalTerjual += terjual;
 
     // =========================
-    // STATUS
+    // NAMA PRODUK
+    // =========================
+    const nama =
+      item.nama || "-";
+
+    // =========================
+    // TRACK DUPLIKAT
+    // =========================
+    if(!namaTracker[nama]){
+
+      namaTracker[nama] = 1;
+
+    }else{
+
+      namaTracker[nama]++;
+
+    }
+
+    // =========================
+    // STATUS OTOMATIS
+    // PERTAMA = LAMA
+    // SELANJUTNYA = BARU
     // =========================
     const status =
-      item.status || "BARU";
+      namaTracker[nama] === 1
+      ? "LAMA"
+      : "BARU";
 
     const statusClass =
       status.toLowerCase();
@@ -161,7 +199,7 @@ function renderDashboard(data) {
         </td>
 
         <td>
-          ${item.nama || "-"}
+          ${nama}
         </td>
 
         <td>
