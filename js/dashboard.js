@@ -14,12 +14,25 @@ async function loadDashboard(){
 
   try{
 
+    // =========================
+    // AMBIL DATA API
+    // =========================
     const res = await request({
       action:"getAllProduk"
     });
 
+    console.log("DATA API:", res);
+
+    // =========================
+    // DATA ARRAY
+    // =========================
     const data = res.data || [];
 
+    console.log("DATA PRODUK:", data);
+
+    // =========================
+    // RENDER
+    // =========================
     renderDashboard(data);
 
   }catch(err){
@@ -97,6 +110,11 @@ function renderDashboard(data){
   // =========================
   data.forEach(item => {
 
+    console.log("ITEM:", item);
+
+    // =========================
+    // TERJUAL
+    // =========================
     const terjual =
       Number(item.terjual || 0);
 
@@ -109,6 +127,11 @@ function renderDashboard(data){
       hitungProfit(item);
 
   });
+
+  console.log(
+    "TOTAL TERJUAL:",
+    totalTerjual
+  );
 
   // =========================
   // ELEMENT
