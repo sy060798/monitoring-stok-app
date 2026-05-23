@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+
 <meta charset="UTF-8">
+
 <title>Setting</title>
 
 <style>
@@ -128,6 +130,7 @@ button:hover{
 }
 
 </style>
+
 </head>
 
 <body>
@@ -138,31 +141,46 @@ button:hover{
     <h2>STOK APP</h2>
 
     <a href="index.html">📊 Dashboard</a>
+
     <a href="produk.html">📦 Produk</a>
+
     <a href="input.html">➕ Input</a>
+
     <a href="laporan.html">📈 Laporan</a>
-    <a class="active" href="setting.html">⚙️ Setting</a>
+
+    <a class="active" href="setting.html">
+        ⚙️ Setting
+    </a>
 
 </div>
 
 <!-- MAIN -->
 <div class="main">
 
-    <h1>Setting</h1>
+    <h1>Setting PPN</h1>
 
     <div class="form">
 
-        <input id="ppn" type="number" placeholder="PPN (%)">
+        <input
+            id="ppn"
+            type="number"
+            placeholder="PPN (%)"
+        >
 
-        <input id="margin" type="number" placeholder="Margin (%)">
+        <button id="btnSaveSetting">
+            Save PPN
+        </button>
 
-        <button id="btnSaveSetting">Save Setting</button>
-
-        <button id="btnApplyAll">Apply To All Produk</button>
+        <button id="btnApplyAll">
+            Apply PPN Ke Semua Produk
+        </button>
 
     </div>
 
 </div>
+
+<!-- SCRIPT -->
+<script src="js/api.js"></script>
 
 <script src="js/setting.js"></script>
 
