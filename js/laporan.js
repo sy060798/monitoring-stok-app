@@ -1,31 +1,36 @@
 // ===============================
 // LAPORAN.JS
-// SISTEM STOCK BATCH DROPSHIP
 // ===============================
 
-// ===============================
 // DATA GLOBAL
-// ===============================
 let allData = [];
 
 // ===============================
 // LOAD DATA
 // ===============================
-function loadDashboard(){
+async function loadDashboard() {
 
   try{
 
     // =========================
-    // AMBIL DATA LOCAL STORAGE
+    // AMBIL DATA DARI API
     // =========================
-    allData = JSON.parse(
-      localStorage.getItem(
-        "produkData"
-      )
-    ) || [];
+    const res = await request({
+      action:"getAllProduk"
+    });
 
     console.log(
-      "DATA LAPORAN:",
+      "DATA API LAPORAN:",
+      res
+    );
+
+    // =========================
+    // DATA ARRAY
+    // =========================
+    allData = res.data || [];
+
+    console.log(
+      "ALL DATA LAPORAN:",
       allData
     );
 
@@ -48,13 +53,12 @@ function loadDashboard(){
 // ===============================
 // RENDER DASHBOARD
 // ===============================
-function renderDashboard(data){
+function renderDashboard(data) {
 
   // =========================
   // TOTAL
   // =========================
-  let totalProduk =
-    data.length;
+  let totalProduk = data.length;
 
   let totalStok = 0;
 
@@ -88,9 +92,7 @@ function renderDashboard(data){
   // =========================
   if(!tbody) return;
 
-  // =========================
   // RESET TABLE
-  // =========================
   tbody.innerHTML = "";
 
   // =========================
@@ -102,13 +104,8 @@ function renderDashboard(data){
 
       <tr>
 
-        <td
-          colspan="6"
-          class="empty"
-        >
-
+        <td colspan="6" class="empty">
           Belum ada data produk
-
         </td>
 
       </tr>
@@ -133,9 +130,6 @@ function renderDashboard(data){
     const terjual =
       Number(item.terjual || 0);
 
-    // =========================
-    // SISA STOK
-    // =========================
     const sisa =
       stok - terjual;
 
@@ -152,20 +146,8 @@ function renderDashboard(data){
     const status =
       item.status || "BARU";
 
-    // =========================
-    // CLASS STATUS
-    // =========================
-    let statusClass = "baru";
-
-    if(
-      status
-      .toLowerCase()
-      .includes("lama")
-    ){
-
-      statusClass = "lama";
-
-    }
+    const statusClass =
+      status.toLowerCase();
 
     // =========================
     // RENDER ROW
@@ -184,13 +166,8 @@ function renderDashboard(data){
 
         <td>
 
-          <span class="
-            status
-            ${statusClass}
-          ">
-
+          <span class="status ${statusClass}">
             ${status}
-
           </span>
 
         </td>
@@ -214,12 +191,12 @@ function renderDashboard(data){
   });
 
   console.log(
-    "TOTAL TERJUAL LAPORAN:",
+    "TOTAL TERJUAL:",
     totalTerjual
   );
 
   // =========================
-  // RENDER TOTAL
+  // TOTAL CARD
   // =========================
   if(elProduk){
 
@@ -245,63 +222,53 @@ function renderDashboard(data){
 }
 
 // ===============================
-// SEARCH SKU / NAMA PRODUK
+// SEARCH
 // ===============================
-const searchInput =
-  document.getElementById(
-    "searchInput"
-  );
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-if(searchInput){
-
-  searchInput.addEventListener(
-    "input",
-    function(){
-
-      const keyword =
-        this.value
-        .toLowerCase();
-
-      // =====================
-      // FILTER DATA
-      // =====================
-      const filtered =
-        allData.filter(item => {
-
-          const nama =
-            (item.nama || "")
-            .toLowerCase();
-
-          const sku =
-            (item.sku || "")
-            .toLowerCase();
-
-          return (
-
-            nama.includes(
-              keyword
-            )
-
-            ||
-
-            sku.includes(
-              keyword
-            )
-
-          );
-
-        });
-
-      // =====================
-      // RENDER FILTER
-      // =====================
-      renderDashboard(
-        filtered
+    const searchInput =
+      document.getElementById(
+        "searchInput"
       );
 
-  });
+    if(searchInput){
 
-}
+      searchInput.addEventListener(
+        "input",
+        function(){
+
+          const keyword =
+            this.value.toLowerCase();
+
+          const filtered =
+            allData.filter(item => {
+
+              return (
+
+                (item.nama || "")
+                  .toLowerCase()
+                  .includes(keyword)
+
+                ||
+
+                (item.sku || "")
+                  .toLowerCase()
+                  .includes(keyword)
+
+              );
+
+            });
+
+          renderDashboard(filtered);
+
+      });
+
+    }
+
+  }
+);
 
 // ===============================
 // LOAD AWAL
