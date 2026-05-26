@@ -23,10 +23,10 @@ function autoMargin() {
   let margin = 0;
 
   if (modal < 10000) {
-    margin = 20;
+    margin = 35;
   } 
   else if (modal >= 10000 && modal <= 25000) {
-    margin = 16;
+    margin = 22;
   } 
   else if (modal > 25000 && modal <= 60000) {
     margin = 18;
