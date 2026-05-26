@@ -109,7 +109,5 @@ function formatRupiah(num) {
 // GENERATE SKU
 // =====================================
 function generateSKU(prefix = "BRG") {
-
-  return prefix + "-" + Date.now();
-
+  return `${prefix}-${Date.now()}`;
 }
