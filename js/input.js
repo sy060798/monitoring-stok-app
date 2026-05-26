@@ -124,8 +124,5 @@ function clearForm() {
 // GENERATE SKU
 // =========================
 function generateSKU(prefix = "BRG") {
-
-  const random = Math.floor(Math.random() * 100000);
-
-  return `${prefix}${Date.now()}${random}`;
+  return `${prefix}-${Date.now()}`;
 }
