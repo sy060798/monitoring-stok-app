@@ -29,7 +29,7 @@ function autoMargin() {
     margin = 22;
   } 
   else if (modal > 25000 && modal <= 60000) {
-    margin = 18;
+    margin = 15;
   } 
   else if (modal > 60000 && modal <= 100000) {
     margin = 10;
